@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 
-import screen_width_settings from "../screen_width_utils/screen_width_settings";
+import screen_width_settings from "../utils/screen_width/screen_width_settings";
 
 // var backend_url
 // if (window.location.hostname === 'nut-nut.ru'){

@@ -9,6 +9,7 @@
 
 <script>
 import sl_container from "../sl_components/sl_container";
+import drag_resizer from "../../utils/drag_resize/drag_resizer";
 import components_tree_controller_mixin from "../../store/components_tree_controller_mixin";
 
 export default {
@@ -21,12 +22,13 @@ export default {
   data (){
     return {
       aspect_ratio_wh: 16/9,
+      resizer: null
     }
   },
   computed:{
     width(){
       let state = this.$store.state
-      return state.screen_width - state.sidebar_left_width - state.sidebar_right_width
+      return state.screen_width - state.sidebar_left_width - state.sidebar_right_width - 30.5
     },
     height(){
       return this.width / this.aspect_ratio_wh
@@ -34,6 +36,14 @@ export default {
   },
   mounted() {
     this.set_ctree_root(this.$refs.root_container)
+
+    let resizer = new drag_resizer.DragResizer()
+    resizer.set_actions()
+    resizer.add_listeners()
+    this.resizer = resizer
+  },
+  beforeUnmount() {
+    this.resizer.remove_listeners()
   }
 }
 </script>

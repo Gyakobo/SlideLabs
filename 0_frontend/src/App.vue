@@ -4,7 +4,7 @@
 
 <script>
 import home from './components/home.vue'
-import screen_width_mixin from "./screen_width_utils/screen_width_mixin";
+import screen_width_mixin from "./utils/screen_width/screen_width_mixin";
 
 export default {
   name: 'App',
