@@ -7,17 +7,27 @@
 </template>
 
 <script>
+import components_tree_controller_mixin from "../../../../store/components_tree_controller_mixin";
+
 export default {
+  mixins:[
+      components_tree_controller_mixin
+  ],
   data (){
     return {
     }
   },
   methods:{
     add_h1(){
-      let root = this.$store.state.root_container
-      root.add_child_by_name('sl_header')
+      let root = this.get_ctree_root()
+      root.add_child('sl_header')
     }
   },
+  created() {
+    this.add_h1()
+    this.add_h1()
+    this.add_h1()
+  }
 }
 </script>
 

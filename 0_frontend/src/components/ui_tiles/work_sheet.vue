@@ -9,14 +9,18 @@
 
 <script>
 import sl_container from "../sl_components/sl_container";
+import components_tree_controller_mixin from "../../store/components_tree_controller_mixin";
 
 export default {
   components:{
     sl_container
   },
+  mixins:[
+    components_tree_controller_mixin
+  ],
   data (){
     return {
-      aspect_ratio_wh: 16/9
+      aspect_ratio_wh: 16/9,
     }
   },
   computed:{
@@ -29,7 +33,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.state.root_container = this.$refs.root_container
+    this.set_ctree_root(this.$refs.root_container)
   }
 }
 </script>

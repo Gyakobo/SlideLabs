@@ -2,8 +2,6 @@ import { createStore } from 'vuex'
 
 import screen_width_settings from "../screen_width_utils/screen_width_settings";
 
-import slide_components_tree from "./slide_components_tree";
-
 // var backend_url
 // if (window.location.hostname === 'nut-nut.ru'){
 //   backend_url = 'https://nut-nut.ru/backend/'
@@ -15,9 +13,6 @@ import slide_components_tree from "./slide_components_tree";
 // }
 
 export default createStore({
-  modules:{
-    slide_components_tree
-  },
   state () {
     return {
       // backend_url: backend_url,
@@ -28,7 +23,7 @@ export default createStore({
 
       sidebar_left_width: 300,
       sidebar_right_width: 300,
-      root_container:null,
+      components_tree_root:null,
     }
   }
 })

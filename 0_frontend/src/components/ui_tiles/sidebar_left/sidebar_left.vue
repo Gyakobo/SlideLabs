@@ -24,9 +24,10 @@
             @click="current_tab = 'tab_components_add'"
         ><i class="plus square outline icon"></i></button>
       </div>
-      <keep-alive>
-        <component :is="current_tab"></component>
-      </keep-alive>
+<!--      <keep-alive>-->
+<!--        <component :is="current_tab"></component>-->
+<!--      </keep-alive>-->
+      <component :is="current_tab"></component>
     </div>
   </resizable>
 </template>

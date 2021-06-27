@@ -1,7 +1,7 @@
 <template>
   <div :id="id" class="sl container">
     <keep-alive v-for="child in children" :key="child">
-      <component :is="child"></component>
+      <component :is="child.component_name" :ref="child.id" :id="child.id"></component>
     </keep-alive>
   </div>
 </template>
@@ -15,7 +15,10 @@ export default {
   },
   data(){
     return {
-      children:[]
+      container_flag:'',
+
+      children:[],
+      next_id: 1,
     }
   },
   props:{
@@ -25,8 +28,30 @@ export default {
     }
   },
   methods:{
-    add_child_by_name(name){
-      this.children.push(name)
+    add_child(component_name, id=null){
+      if (id === null){
+        id = 'item' + this.next_id
+        this.next_id += 1
+      }
+      this.children.push({
+        component_name:component_name,
+        id:id,
+      })
+    },
+    get_children(){
+      let children_out = []
+      for (let i = 0; i < this.children.length; i++){
+        let child = this.children[i]
+        children_out.push({
+          component_name:child.component_name,
+          id:child.id,
+          component_ref:this.$refs[child.id]
+        })
+      }
+      return children_out
+    },
+    get_child_by_id(id){
+      return this.$refs[id]
     }
   }
 }
