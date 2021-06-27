@@ -100,6 +100,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
+  overflow: hidden;
 
   height: 100%;
   width: fit-content;

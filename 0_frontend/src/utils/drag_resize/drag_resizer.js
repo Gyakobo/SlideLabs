@@ -104,7 +104,7 @@ DragResizer.prototype.style_cursor = function (action){
     cursor = 'se-resize'
   }
   else if (action === 'rotate'){
-    cursor = 'wait' //todo add appropriate cursor styling!!
+    cursor = 'wait' //todo add appropriate cursor styling (nesw-resize, nwse-resize)
   }
   this.element.style.cursor = cursor
 }
