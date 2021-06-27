@@ -20,13 +20,18 @@ export default {
   methods:{
     add_h1(){
       let root = this.get_ctree_root()
+      if (root === null){
+        return
+      }
       root.add_child('sl_header')
     }
   },
-  created() {
-    this.add_h1()
-    this.add_h1()
-    this.add_h1()
+  mounted() {
+    setTimeout(() => {
+      this.add_h1()
+      this.add_h1()
+      this.add_h1()
+    }, 100)
   }
 }
 </script>

@@ -36,7 +36,7 @@ export default {
   },
   data (){
     return {
-      current_tab: 'tab_components_tree'
+      current_tab: 'tab_components_add'
     }
   },
   mounted() {

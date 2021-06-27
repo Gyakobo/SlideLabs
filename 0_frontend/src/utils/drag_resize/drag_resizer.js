@@ -43,6 +43,21 @@ DragResizer.prototype.set_enable_cursor_styling = function (is_enable) {
 let constrain = function (v, v_min, v_max){
   return Math.max(v_min, Math.min(v_max, v))
 }
+DragResizer.prototype._add_constraint_functions = function () {
+  this.constrain_width = function (width) {
+    return constrain(width, this.min_width, this.max_width)
+  }
+  this.constrain_height = function (height) {
+    return constrain(height, this.min_height, this.max_height)
+  }
+}
+DragResizer.prototype.enable_default_constraints = function () {
+  this.min_width = 0
+  this.max_width = Infinity
+  this.min_height = 0
+  this.max_height = Infinity
+  this._add_constraint_functions()
+}
 DragResizer.prototype.read_constraints_from_style = function () {
   let style = this.element.style
 
@@ -52,12 +67,7 @@ DragResizer.prototype.read_constraints_from_style = function () {
     this.min_height = (style.minHeight !== '') ? parseFloat(style.minHeight) : 0
     this.max_height = (style.maxHeight !== '') ? parseFloat(style.maxHeight) : Infinity
 
-    this.constrain_width = function (width) {
-      return constrain(width, this.min_width, this.max_width)
-    }
-    this.constrain_height = function (height) {
-      constrain(height, this.min_height, this.max_height)
-    }
+    this._add_constraint_functions()
   }
 }
 
@@ -100,10 +110,15 @@ DragResizer.prototype.style_cursor = function (action){
 }
 
 DragResizer.prototype.detect_action = function (x, y, rect) {
-  let is_top = this.actions.includes('top') && Math.abs(y - rect.top) < 6
-  let is_bottom = this.actions.includes('bottom') && Math.abs(y - rect.bottom) < 6
-  let is_left = this.actions.includes('left') && Math.abs(x - rect.left) < 6
-  let is_right = this.actions.includes('right') && Math.abs(x - rect.right) < 6
+  let is_inside = x >= rect.left && x < rect.right && y >= rect.top && y < rect.bottom
+  if (!is_inside){
+    return null
+  }
+
+  let is_top = this.actions.includes('top') && (y - rect.top) < 10
+  let is_bottom = this.actions.includes('bottom') && (rect.bottom - y) < 10
+  let is_left = this.actions.includes('left') && (x - rect.left) < 10
+  let is_right = this.actions.includes('right') && (rect.right - x) < 10
 
   if (is_left){
     if (is_top){
@@ -127,28 +142,25 @@ DragResizer.prototype.detect_action = function (x, y, rect) {
     return 'bottom'
   }
 
-  let is_inside = x >= rect.left && x < rect.right && y >= rect.top && y < rect.bottom
-  if (is_inside){
-    if (this.actions.includes('drag')){
-      return 'drag'
+  if (this.actions.includes('rotate')){
+    let cx = (rect.right + rect.left) / 2
+    let cy = (rect.bottom + rect.top) / 2
+
+    let offset_x = Math.abs(x - cx)
+    let offset_y = Math.abs(y - cy)
+
+    let w_half = rect.width / 2
+    let h_half = rect.height / 2
+    let is_rotate = offset_x > (w_half - 20) && offset_x < (w_half - 10) &&
+      offset_y > (h_half - 20) && offset_y < (h_half - 10)
+
+    if (is_rotate){
+      return 'rotate'
     }
-  }else {
-    if (this.actions.includes('rotate')){
-      let cx = (rect.right - rect.left) / 2
-      let cy = (rect.bottom - rect.top) / 2
+  }
 
-      let offset_x = Math.abs(x - cx)
-      let offset_y = Math.abs(y - cy)
-
-      let w_half = rect.width / 2
-      let h_half = rect.height / 2
-      let is_rotate = offset_x > (w_half + 3) && offset_x < (w_half + 10) &&
-        offset_y > (h_half + 3) && offset_y < (h_half + 10)
-
-      if (is_rotate){
-        return 'rotate'
-      }
-    }
+  if (this.actions.includes('drag')){
+    return 'drag'
   }
 
   return null
@@ -200,8 +212,8 @@ DragResizer.prototype.pointerdown_listener = function (event) {
     this.start_pointer_y = y
   }
   else if (this.action === 'rotate'){
-    this.cx = (rect.right - rect.left) / 2
-    this.cy = (rect.bottom - rect.top) / 2
+    this.cx = (rect.right + rect.left) / 2
+    this.cy = (rect.bottom + rect.top) / 2
 
     let dx = x - this.cx
     let dy = y - this.cy
@@ -251,8 +263,6 @@ DragResizer.prototype.pointermove_listener = function (event) {
   let x = event.pageX
   let y = event.pageY
 
-  console.log(x, y)
-
   let dx = x - this.start_pointer_x
   let dy = y - this.start_pointer_y
 
@@ -271,34 +281,42 @@ DragResizer.prototype.pointermove_listener = function (event) {
   else{
     let width = this.start_width
     let height = this.start_height
-    // let left = this.start_x
-    // let top = this.start_y
+    let dleft = 0
+    let dtop = 0
 
     if (['left','lt', 'lb'].includes(this.action)){
-      // left += dx
+      dleft = dx
       width -= dx
     } else if (['right','rt', 'rb'].includes(this.action)){
       width += dx
     }
 
     if (['top','lt', 'rt'].includes(this.action)){
-      // top += dy
+      dtop = dy
       height -= dy
     } else if (['bottom','lb', 'rb'].includes(this.action)){
       height += dy
     }
 
     if (this.constrain_width !== null){
-      width = this.constrain_width(width)
+      let cwidth = this.constrain_width(width)
+      if (dleft !== 0){
+        dleft += width - cwidth
+      }
+      width = cwidth
     }
     if (this.constrain_height !== null){
-      height = this.constrain_height(height)
+      let cheight = this.constrain_height(height)
+      if (dtop !== 0){
+        dtop += height - cheight
+      }
+      height = cheight
     }
 
     this.element.style.width = width + 'px'
     this.element.style.height = height + 'px'
-    // this.element.style.left = left + 'px'
-    // this.element.style.top = top + 'px'
+    this.element.style.left = (this.start_x + dleft) + 'px'
+    this.element.style.top = (this.start_y + dtop) + 'px'
 
     if(this.on_width_change !== null){
       this.on_width_change(width)

@@ -84,7 +84,8 @@ export default {
 
     let resizer = new drag_resizer.DragResizer()
     resizer.set_enable_cursor_styling(true)
-    resizer.set_actions()
+    resizer.enable_default_constraints()
+    resizer.set_actions(['top', 'bottom', 'left', 'right', 'drag'])
     resizer.add_listeners()
     this.resizer = resizer
   },
