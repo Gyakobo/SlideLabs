@@ -1,6 +1,6 @@
 <template>
   <div id="sidebar_right_wrapper" style="min-width: 200px; max-width:400px">
-    <div class="sidebar-right no-pointer">
+    <div class="sidebar-right">
       <div>
         {{text}}
       </div>
@@ -45,12 +45,6 @@ export default {
   height: 100%;
 
   border-left: 5px solid #999;
-
-  cursor: col-resize;
-}
-
-.no-pointer{
-  cursor: default;
 }
 
 .sidebar-right{

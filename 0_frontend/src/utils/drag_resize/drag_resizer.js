@@ -2,7 +2,8 @@ let DragResizer = function(){
   this.element = null
   this.actions = null
 
-  this.current_action = null
+  this.action = null
+  this.pointer_id = null
 
   this.on_width_change = null
   this.constrain_width = null
@@ -10,29 +11,21 @@ let DragResizer = function(){
 
   this.enable_cursor_styling = false
 
-  this.x0 = 0
-  this.y0 = 0
-
   this.start_x = 0
   this.start_y = 0
-  this.start_mouse_x = 0
-  this.start_mouse_y = 0
+  this.start_pointer_x = 0
+  this.start_pointer_y = 0
 
   this.cx = 0
   this.cy = 0
   this.start_angle = 0
-  this.start_mouse_angle = 0
+  this.start_pointer_angle = 0
 
   this.start_width = 0
   this.start_height = 0
 }
 DragResizer.prototype.set_element = function (element) {
   this.element = element
-}
-DragResizer.prototype.read_offsets_from_element = function (element) {
-  let rect = element.getBoundingClientRect()
-  this.x0 = rect.left
-  this.y0 = rect.top
 }
 
 const all_actions_enabled = ['top', 'bottom', 'left', 'right', 'drag', 'rotate']
@@ -69,39 +62,41 @@ DragResizer.prototype.read_constraints_from_style = function () {
 }
 
 DragResizer.prototype.style_cursor = function (action){
+  let cursor
   if (action === null){
-    this.element.style.cursor = 'default'
+    cursor = 'default'
   }
   else if (action === 'drag'){
-    this.element.style.cursor = 'move'
+    cursor = 'move'
   }
   else if (action === 'top'){
-    this.element.style.cursor = 'n-resize'
+    cursor = 'n-resize'
   }
   else if (action === 'bottom'){
-    this.element.style.cursor = 's-resize'
+    cursor = 's-resize'
   }
   else if (action === 'left'){
-    this.element.style.cursor = 'w-resize'
+    cursor = 'w-resize'
   }
   else if (action === 'right'){
-    this.element.style.cursor = 'e-resize'
+    cursor = 'e-resize'
   }
   else if (action === 'lt'){
-    this.element.style.cursor = 'nw-resize'
+    cursor = 'nw-resize'
   }
   else if (action === 'lb'){
-    this.element.style.cursor = 'sw-resize'
+    cursor = 'sw-resize'
   }
   else if (action === 'rt'){
-    this.element.style.cursor = 'ne-resize'
+    cursor = 'ne-resize'
   }
   else if (action === 'rb'){
-    this.element.style.cursor = 'se-resize'
+    cursor = 'se-resize'
   }
   else if (action === 'rotate'){
-    this.element.style.cursor = 'wait' //todo add appropriate cursor styling!!
+    cursor = 'wait' //todo add appropriate cursor styling!!
   }
+  this.element.style.cursor = cursor
 }
 
 DragResizer.prototype.detect_action = function (x, y, rect) {
@@ -159,13 +154,31 @@ DragResizer.prototype.detect_action = function (x, y, rect) {
   return null
 }
 
-DragResizer.prototype.mousedown_listener = function (event) {
+DragResizer.prototype.on_focus_enter = function (pointer_id){
+  this.element.style.userSelect = 'none'
+
+  this.pointer_id = pointer_id
+  // this.element.setPointerCapture(pointer_id)
+}
+DragResizer.prototype.on_focus_exit = function (){
+  if (this.element !== null){
+    this.element.style.userSelect = ''
+  }
+  // if (this.pointer_id !== null){
+  //   this.element.releasePointerCapture(this.pointer_id)
+  //   this.pointer_id = null
+  // }
+
+  this.action = null
+}
+
+DragResizer.prototype.pointerdown_listener = function (event) {
   if (event.which !== 1 || this.element === null){
     return
   }
 
-  let x = event.pageX - this.cx
-  let y = event.pageY - this.cy
+  let x = event.pageX
+  let y = event.pageY
   let rect = this.element.getBoundingClientRect()
 
   this.action = this.detect_action(x,y,rect)
@@ -173,16 +186,18 @@ DragResizer.prototype.mousedown_listener = function (event) {
   if (this.action === null){
     return
   }
+  this.on_focus_enter(event.pointerId)
 
-  this.start_mouse_x = x
-  this.start_mouse_y = y
-
+  this.start_pointer_x = x
+  this.start_pointer_y = y
 
   if (this.action === 'drag'){
-    this.start_x = rect.left
-    this.start_y = rect.top
-    this.start_mouse_x = x
-    this.start_mouse_y = y
+    let left = this.element.style.left
+    let top = this.element.style.top
+    this.start_x = left !== '' ? parseFloat(left) : 0
+    this.start_y = top !== '' ? parseFloat(top) : 0
+    this.start_pointer_x = x
+    this.start_pointer_y = y
   }
   else if (this.action === 'rotate'){
     this.cx = (rect.right - rect.left) / 2
@@ -192,47 +207,58 @@ DragResizer.prototype.mousedown_listener = function (event) {
     let dy = y - this.cy
 
     this.start_angle = 0
-    this.start_mouse_angle = Math.atan2(dy, dx)
+    this.start_pointer_angle = Math.atan2(dy, dx)
   }
   else{
+    let left = this.element.style.left
+    let top = this.element.style.top
+    this.start_x = left !== '' ? parseFloat(left) : 0
+    this.start_y = top !== '' ? parseFloat(top) : 0
     this.start_width = rect.width
     this.start_height = rect.height
-    this.start_mouse_x = x
-    this.start_mouse_y = y
+    this.start_pointer_x = x
+    this.start_pointer_y = y
   }
 }
-DragResizer.prototype.mouseup_listener = function (event) {
+
+DragResizer.prototype.pointerup_listener = function (event) {
   if (event.which !== 1){
     return
   }
-  this.action = null
+  this.on_focus_exit()
 }
-DragResizer.prototype.mousemove_listener = function (event) {
+DragResizer.prototype.pointermove_listener = function (event) {
   if(this.element === null){
     return
   }
   if (this.enable_cursor_styling){
-    let action = this.detect_action()
+    let action = this.action
+    if (action === null) {
+      let x = event.pageX
+      let y = event.pageY
+      let rect = this.element.getBoundingClientRect()
+
+      action = this.detect_action(x, y, rect)
+    }
+
     this.style_cursor(action)
   }
 
   if (this.action === null){
     return
   }
-  if (event.which !== 1){
-    this.action = null
-    return
-  }
 
-  let x = event.pageX - this.cx
-  let y = event.pageY - this.cy
+  let x = event.pageX
+  let y = event.pageY
 
-  let dx = x - this.start_mouse_x
-  let dy = y - this.start_mouse_y
+  console.log(x, y)
+
+  let dx = x - this.start_pointer_x
+  let dy = y - this.start_pointer_y
 
   if (this.action === 'drag'){
-    this.element.style.left = this.start_x + dx
-    this.element.style.top = this.start_y + dy
+    this.element.style.left = (this.start_x + dx) + 'px'
+    this.element.style.top = (this.start_y + dy) + 'px'
   }
   else if(this.action === 'rotate'){
     let dx = x - this.cx
@@ -245,14 +271,18 @@ DragResizer.prototype.mousemove_listener = function (event) {
   else{
     let width = this.start_width
     let height = this.start_height
+    // let left = this.start_x
+    // let top = this.start_y
 
     if (['left','lt', 'lb'].includes(this.action)){
+      // left += dx
       width -= dx
     } else if (['right','rt', 'rb'].includes(this.action)){
       width += dx
     }
 
     if (['top','lt', 'rt'].includes(this.action)){
+      // top += dy
       height -= dy
     } else if (['bottom','lb', 'rb'].includes(this.action)){
       height += dy
@@ -267,6 +297,8 @@ DragResizer.prototype.mousemove_listener = function (event) {
 
     this.element.style.width = width + 'px'
     this.element.style.height = height + 'px'
+    // this.element.style.left = left + 'px'
+    // this.element.style.top = top + 'px'
 
     if(this.on_width_change !== null){
       this.on_width_change(width)
@@ -275,18 +307,18 @@ DragResizer.prototype.mousemove_listener = function (event) {
 
 }
 DragResizer.prototype.add_listeners = function () {
-  this.mdl = (event) => {this.mousedown_listener(event)}
-  this.mul = (event) => {this.mouseup_listener(event)}
-  this.mml = (event) => {this.mousemove_listener(event)}
+  this.mdl = (event) => {this.pointerdown_listener(event)}
+  this.mul = (event) => {this.pointerup_listener(event)}
+  this.mml = (event) => {this.pointermove_listener(event)}
 
-  document.addEventListener('mousedown', this.mdl)
-  document.addEventListener('mouseup', this.mul)
-  document.addEventListener('mousemove', this.mml)
+  document.addEventListener('pointerdown', this.mdl)
+  document.addEventListener('pointerup', this.mul)
+  document.addEventListener('pointermove', this.mml)
 }
 DragResizer.prototype.remove_listeners = function () {
-  document.removeEventListener('mousedown', this.mdl)
-  document.removeEventListener('mouseup', this.mul)
-  document.removeEventListener('mousemove', this.mml)
+  document.removeEventListener('pointerdown', this.mdl)
+  document.removeEventListener('pointerup', this.mul)
+  document.removeEventListener('pointermove', this.mml)
 }
 
 export default {

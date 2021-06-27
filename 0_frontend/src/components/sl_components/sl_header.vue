@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" class="sl header">
+  <div :id="id" class="sl header" style="left:100px">
     <h1 class="ui header">{{ text }}</h1>
   </div>
 </template>
@@ -27,7 +27,6 @@ export default {
   height: fit-content;
 
   position: absolute;
-  left: 20%;
 }
 
 </style>

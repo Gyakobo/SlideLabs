@@ -1,6 +1,6 @@
 <template>
   <div id="sidebar_left_wrapper" style="min-width: 200px; max-width:400px">
-    <div class="sidebar-left no-pointer">
+    <div class="sidebar-left">
       <div class="ui icon buttons">
         <button
             class="ui button"
@@ -67,12 +67,6 @@ export default {
   height: 100%;
 
   border-right: 5px solid #999;
-
-  cursor: col-resize;
-}
-
-.no-pointer{
-  cursor: default;
 }
 
 .sidebar-left{
