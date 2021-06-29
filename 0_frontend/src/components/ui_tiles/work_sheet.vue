@@ -3,7 +3,7 @@
     <div class="work-sheet" :style="{width:width + 'px', height:height + 'px'}">
       <sl_container
           ref="root_container"
-          id="root_container"
+          :components_tree_item="components_tree_root_item"
           @pointerover="on_pointerover"
           @pointerout="on_pointerout">
       </sl_container>
@@ -14,7 +14,7 @@
 <script>
 import sl_container from "../sl_components/sl_container";
 import drag_resizer from "../../utils/drag_resize/drag_resizer";
-import components_tree_controller_mixin from "../../store/components_tree_controller_mixin";
+import components_tree_controller_mixin from "../../utils/components_tree/components_tree_controller_mixin";
 
 export default {
   components:{
@@ -25,8 +25,9 @@ export default {
   ],
   data (){
     return {
-      aspect_ratio_wh: 16/9,
+      project_settings: this.$store.state.project_settings,
       root_element:null,
+      components_tree_root_item:null,
       resizer: null,
     }
   },
@@ -36,7 +37,7 @@ export default {
       return state.screen_width - state.sidebar_left_width - state.sidebar_right_width - 30.5
     },
     height(){
-      return this.width / this.aspect_ratio_wh
+      return this.width / this.project_settings.aspect_ratio_wh
     }
   },
   methods:{
@@ -78,8 +79,11 @@ export default {
       target.style.background = ''
     }
   },
+  created() {
+    this.components_tree_root_item = this.get_ctree_root()
+  },
   mounted() {
-    this.set_ctree_root(this.$refs.root_container)
+
     this.root_element = document.getElementById('root_container')
 
     let resizer = new drag_resizer.DragResizer()

@@ -1,13 +1,11 @@
 <template>
   <div class="tree-wrapper">
-    <div v-if="is_tree_root_loaded">
-      <tab_components_tree_item :real_component="tree_root"></tab_components_tree_item>
-    </div>
+    <tab_components_tree_item :components_tree_item="components_tree_root_item"></tab_components_tree_item>
   </div>
 </template>
 
 <script>
-import components_tree_controller_mixin from "../../../../store/components_tree_controller_mixin";
+import components_tree_controller_mixin from "../../../../utils/components_tree/components_tree_controller_mixin";
 import tab_components_tree_item from "./tab_components_tree_item";
 
 export default {
@@ -19,16 +17,12 @@ export default {
   ],
   data (){
     return {
-      is_tree_root_loaded:false,
-      tree_root:null
+      components_tree_root_item:null
     }
   },
-  mounted() {
-    setTimeout(() => {
-      this.tree_root = this.get_ctree_root()
-      this.is_tree_root_loaded = true
-    }, 100)
-  }
+  created() {
+    this.components_tree_root_item = this.get_ctree_root()
+  },
 }
 </script>
 

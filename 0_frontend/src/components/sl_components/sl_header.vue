@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" class="sl header" style="left:100px">
+  <div :id="components_tree_item.id" class="sl header" style="left:100px">
     <h1 class="ui header">{{ text }}</h1>
   </div>
 </template>
@@ -12,21 +12,21 @@ export default {
     }
   },
   props:{
-    id:{
-      type:String,
+    components_tree_item:{
+      type:Object,
       required:true,
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .sl.header{
   width: fit-content;
   height: fit-content;
 
   position: absolute;
+  user-select: none;
 }
 
 </style>

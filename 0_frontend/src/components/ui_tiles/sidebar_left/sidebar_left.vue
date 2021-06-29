@@ -3,40 +3,51 @@
     <div class="sidebar-left">
       <div class="ui icon buttons">
         <button
+            v-for="tab in tabs"
+            :key="tab.name"
             class="ui button"
             :class="{
-              active: current_tab === 'tab_components_tree'
+              active: current_tab === tab.name
             }"
-            @click="current_tab = 'tab_components_tree'"
-        ><i class="sitemap icon"></i></button>
-        <button
-            class="ui button"
-            :class="{
-              active: current_tab === 'tab_components_add'
-            }"
-            @click="current_tab = 'tab_components_add'"
-        ><i class="plus square outline icon"></i></button>
+            @click="current_tab = tab.name"
+        >
+          <i class="icon" :class="tab.classes"></i>
+        </button>
       </div>
-<!--      <keep-alive>-->
-<!--        <component :is="current_tab"></component>-->
-<!--      </keep-alive>-->
-      <component :is="current_tab"></component>
+      <keep-alive>
+        <component :is="current_tab"></component>
+      </keep-alive>
     </div>
   </div>
 </template>
 
 <script>
+import tab_components_settings from "./children/tab_components_settings";
 import tab_components_tree from "./children/tab_components_tree";
 import tab_components_add from "./children/tab_components_add";
 import drag_resizer from "../../../utils/drag_resize/drag_resizer";
 
 export default {
   components:{
-    tab_components_tree, tab_components_add
+    tab_components_settings, tab_components_tree, tab_components_add
   },
   data (){
     return {
-      current_tab: 'tab_components_add'
+      current_tab: 'tab_components_add',
+      tabs:[
+        {
+          name:'tab_components_settings',
+          classes:['edit']
+        },
+        {
+          name:'tab_components_tree',
+          classes:['sitemap']
+        },
+        {
+          name:'tab_components_add',
+          classes:['plus', 'square', 'outline']
+        }
+      ]
     }
   },
   mounted() {

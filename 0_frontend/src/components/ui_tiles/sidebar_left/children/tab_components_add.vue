@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import components_tree_controller_mixin from "../../../../store/components_tree_controller_mixin";
+import components_tree_controller_mixin from "../../../../utils/components_tree/components_tree_controller_mixin";
 
 export default {
   mixins:[
@@ -15,16 +15,17 @@ export default {
   ],
   data (){
     return {
+      components_tree_root_item:null,
     }
   },
   methods:{
     add_h1(){
-      let root = this.get_ctree_root()
-      if (root === null){
-        return
-      }
+      let root = this.components_tree_root_item
       root.add_child('sl_header')
     }
+  },
+  created() {
+    this.components_tree_root_item = this.get_ctree_root()
   },
   mounted() {
     setTimeout(() => {

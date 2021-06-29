@@ -23,7 +23,13 @@ export default createStore({
 
       sidebar_left_width: 300,
       sidebar_right_width: 300,
+
+      project_settings:{
+        aspect_ratio_wh:16/9,
+      },
+
       components_tree_root:null,
+      active_component:null,
     }
   }
 })

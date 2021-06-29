@@ -1,24 +1,24 @@
 <template>
   <ul class="tree-item" :class="{folder:is_folder, collapsed:is_collapsed}">
-    <div class="tree-item-header" @click="toggle_collapse">
-      <i v-if="is_folder" class="angle down icon"></i>
-      <i v-if="is_folder" class="angle right icon"></i>
-      <i v-if="is_folder" class="folder outline icon"></i>
+    <div class="tree-item-header" :class="{active:components_tree_item.is_active}">
+      <i v-if="is_folder" class="angle down icon" @click="toggle_collapse"></i>
+      <i v-if="is_folder" class="angle right icon" @click="toggle_collapse"></i>
+      <i v-if="is_folder" class="folder outline icon" @click="toggle_collapse"></i>
       <i v-else class="file outline icon"></i>
 
-      <span class="header-text">{{header_text}}</span>
+      <span class="header-text" @click="set_active_component(components_tree_item)">{{header_text}}</span>
 
     </div>
     <li v-if="is_folder" class="tree-list">
-      <keep-alive v-for="child in children" :key="child.id">
-        <component :is="'tab_components_tree_item'" :real_component="child.component_ref"></component>
+      <keep-alive v-for="child in components_tree_item.children" :key="child.id">
+        <component :is="'tab_components_tree_item'" :components_tree_item="child"></component>
       </keep-alive>
     </li>
   </ul>
 </template>
 
 <script>
-import components_tree_controller_mixin from "../../../../store/components_tree_controller_mixin";
+import components_tree_controller_mixin from "../../../../utils/components_tree/components_tree_controller_mixin";
 
 var tab_components_tree_item = {
   mixins:[
@@ -32,14 +32,14 @@ var tab_components_tree_item = {
     }
   },
   props:{
-    real_component:{
+    components_tree_item:{
       type:Object,
       required:true,
     }
   },
   computed:{
     header_text(){
-      return 'ID:' +  this.real_component.id
+      return 'ID:' +  this.components_tree_item.id
     }
   },
   methods:{
@@ -47,13 +47,9 @@ var tab_components_tree_item = {
       this.is_collapsed = !this.is_collapsed
     },
   },
-  mounted() {
-    let is_real_container = this.is_container(this.real_component)
-    this.is_folder = is_real_container
-    if (is_real_container){
-      this.children = this.real_component.get_children()
-    }
-  }
+  created() {
+    this.is_folder = this.components_tree_item.is_folder
+  },
 }
 tab_components_tree_item.components = {
   tab_components_tree_item
@@ -81,10 +77,10 @@ export default tab_components_tree_item
 .tree-item-header:hover {
   background-color: rgba(0,0,0,0.1)
 }
-.tree-item-header.highlight {
+.tree-item-header.active {
   background-color: rgba(0,0,0,0.15)
 }
-.tree-item-header.highlight:hover {
+.tree-item-header.active:hover {
   background-color: rgba(0,0,0,0.2)
 }
 
