@@ -1,7 +1,9 @@
 <template>
-  <div :id="id" class="sl header" style="left:100px">
-    <h1 @dblclick="EditText($event);" @keydown.enter.prevent @keyup.escape="QuitEditText($event);" @keyup.enter="QuitEditText($event);" spellcheck=false ref="TextElement" style="margin:0; padding:0;" class="ui header TextElement" :class="{ 'normal_tag_name' : editTextFlag }">Example Text</h1>
-  </div>
+	<div id="TextPad" class="sl header" style="left:100px">
+    
+		<h1 @dblclick="EditText($event);" @keydown.enter.prevent @keyup.escape="QuitEditText($event);" @keyup.enter="QuitEditText($event);" spellcheck=false ref="TextElement" style="margin:0; padding:0;" class="TextElement" :class="{ 'normal_tag_name' : editTextFlag }">Example Text</h1>
+  
+	</div>
 </template>
 
 <script>
@@ -18,6 +20,11 @@ export default {
       required:true,
     }
   },
+	
+	updated() {
+		
+	},
+
 	methods: {
 		EditText(event) {
 			const targetID = event.currentTarget;
@@ -48,6 +55,15 @@ export default {
   height: fit-content;
 
   position: absolute;
+}
+
+#TextPad {
+	display:	grid;
+	
+	grid-template-columns:	1fr;
+	grid-template-rows:	1fr;
+
+	place-items:	center;
 }
 
 .normal_tag_name {
