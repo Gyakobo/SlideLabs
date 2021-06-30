@@ -1,5 +1,11 @@
 <template>
-  <div id="sidebar_right_wrapper" style="min-width: 200px; max-width:400px">
+  <div
+      id="sidebar_right_wrapper"
+      style="min-width: 200px; max-width:400px"
+      :style="{
+        width:wrapper_width
+      }"
+  >
     <div class="sidebar-right">
       <div>
         {{text}}
@@ -17,18 +23,22 @@ export default {
       text:'This is right sidebar',
     }
   },
+  computed:{
+    wrapper_width(){
+      return this.$store.state.sidebar_right_width + 'px'
+    }
+  },
   mounted() {
     let wrapper = document.getElementById('sidebar_right_wrapper')
-    wrapper.style.width = this.$store.state.sidebar_right_width + 'px'
 
     let resizer = new drag_resizer.DragResizer()
     resizer.set_element(wrapper)
     resizer.read_constraints_from_style()
     resizer.set_actions(['left'])
     resizer.set_enable_cursor_styling(true)
-    resizer.set_on_width_change_callback(
-        (new_value) => {
-          this.$store.state.sidebar_right_width = parseFloat(new_value)
+    resizer.set_update_size_callback(
+        (w) => {
+          this.$store.state.sidebar_right_width = w
         }
     )
     resizer.add_listeners()

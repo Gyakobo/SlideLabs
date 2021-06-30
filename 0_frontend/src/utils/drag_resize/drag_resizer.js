@@ -5,7 +5,6 @@ let DragResizer = function(){
   this.action = null
   this.pointer_id = null
 
-  this.on_width_change = null
   this.constrain_width = null
   this.constrain_height = null
 
@@ -31,9 +30,6 @@ DragResizer.prototype.set_element = function (element) {
 const all_actions_enabled = ['top', 'bottom', 'left', 'right', 'drag', 'rotate']
 DragResizer.prototype.set_actions = function (actions=all_actions_enabled) {
   this.actions = actions
-}
-DragResizer.prototype.set_on_width_change_callback = function (func) {
-  this.on_width_change = func
 }
 
 DragResizer.prototype.set_enable_cursor_styling = function (is_enable) {
@@ -71,13 +67,30 @@ DragResizer.prototype.read_constraints_from_style = function () {
   }
 }
 
+DragResizer.prototype.update_position = function (x, y){
+  this.element.style.left = x + 'px'
+  this.element.style.top = y + 'px'
+}
+DragResizer.prototype.update_size = function (w, h){
+  this.element.style.width = w + 'px'
+  this.element.style.height = h + 'px'
+}
+DragResizer.prototype.set_update_position_callback = function (callback){
+  this.update_position = callback
+}
+DragResizer.prototype.set_update_size_callback = function (callback){
+  this.update_size = callback
+}
+
+
+
 DragResizer.prototype.style_cursor = function (action){
   let cursor
   if (action === null){
     cursor = 'default'
   }
   else if (action === 'drag'){
-    cursor = 'move'
+    cursor = 'default'
   }
   else if (action === 'top'){
     cursor = 'n-resize'
@@ -170,16 +183,16 @@ DragResizer.prototype.on_focus_enter = function (pointer_id){
   this.element.style.userSelect = 'none'
 
   this.pointer_id = pointer_id
-  // this.element.setPointerCapture(pointer_id)
+  this.element.setPointerCapture(pointer_id)
 }
 DragResizer.prototype.on_focus_exit = function (){
   if (this.element !== null){
     this.element.style.userSelect = ''
   }
-  // if (this.pointer_id !== null){
-  //   this.element.releasePointerCapture(this.pointer_id)
-  //   this.pointer_id = null
-  // }
+  if (this.pointer_id !== null){
+    this.element.releasePointerCapture(this.pointer_id)
+    this.pointer_id = null
+  }
 
   this.action = null
 }
@@ -267,8 +280,10 @@ DragResizer.prototype.pointermove_listener = function (event) {
   let dy = y - this.start_pointer_y
 
   if (this.action === 'drag'){
-    this.element.style.left = (this.start_x + dx) + 'px'
-    this.element.style.top = (this.start_y + dy) + 'px'
+    this.update_position(
+      this.start_x + dx,
+      this.start_y + dy
+    )
   }
   else if(this.action === 'rotate'){
     let dx = x - this.cx
@@ -313,14 +328,11 @@ DragResizer.prototype.pointermove_listener = function (event) {
       height = cheight
     }
 
-    this.element.style.width = width + 'px'
-    this.element.style.height = height + 'px'
-    this.element.style.left = (this.start_x + dleft) + 'px'
-    this.element.style.top = (this.start_y + dtop) + 'px'
-
-    if(this.on_width_change !== null){
-      this.on_width_change(width)
-    }
+    this.update_size(width, height)
+    this.update_position(
+      this.start_x + dleft,
+      this.start_y + dtop
+    )
   }
 
 }
@@ -329,14 +341,14 @@ DragResizer.prototype.add_listeners = function () {
   this.mul = (event) => {this.pointerup_listener(event)}
   this.mml = (event) => {this.pointermove_listener(event)}
 
-  document.addEventListener('pointerdown', this.mdl)
-  document.addEventListener('pointerup', this.mul)
-  document.addEventListener('pointermove', this.mml)
+  this.element.onpointerdown = this.mdl
+  this.element.onpointerup = this.mul
+  this.element.onpointermove = this.mml
 }
 DragResizer.prototype.remove_listeners = function () {
-  document.removeEventListener('pointerdown', this.mdl)
-  document.removeEventListener('pointerup', this.mul)
-  document.removeEventListener('pointermove', this.mml)
+  this.element.onpointerdown = null
+  this.element.onpointerup = null
+  this.element.onpointermove = null
 }
 
 export default {

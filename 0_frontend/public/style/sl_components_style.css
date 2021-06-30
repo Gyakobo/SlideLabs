@@ -1,0 +1,7 @@
+.sl.active {
+    border: var(--blue-dark) 3px solid;
+}
+
+.sl:not(.active):hover{
+    border: var(--blue-dark) 1px solid;
+}
