@@ -5,8 +5,18 @@
       :class="{active:components_tree_item.is_active}"
       :style="dr_style"
       @pointerdown="set_active_component(components_tree_item)"
+      @dblclick="edit_text();"
+      @keydown.enter.prevent
+      @keyup.escape="quit_edit_text();"
+      @keyup.enter="quit_edit_text();"
   >
-    <h1 class="ui header">{{ text }}</h1>
+    <h1
+        class="ui header"
+        :class="{on_text_edit: edit_text_flag}"
+        spellcheck=false
+    >
+      Example Text
+    </h1>
   </div>
 </template>
 
@@ -21,7 +31,7 @@ export default {
   ],
   data (){
     return {
-      text:'Yet another header'
+      edit_text_flag:	false,
     }
   },
   props:{
@@ -41,22 +51,54 @@ export default {
         this.resizer.set_actions(['top', 'bottom', 'left', 'right', 'drag'])
       }else{
         this.resizer.set_actions(['drag'])
+        this.quit_edit_text()
       }
     }
   },
+  methods: {
+    edit_text() {
+      this.root_element.contentEditable = true
+      this.edit_text_flag = true;
+    },
+    quit_edit_text() {
+      this.root_element.contentEditable = false
+      this.edit_text_flag = false;
+    },
+  },
   created() {
-    this.init_size(100, 100)
-  }
+    this.init_size(200, 100)
+  },
 }
+
+
 </script>
 
 <style scoped>
 .sl.header{
+  display:	grid;
+
+  grid-template-columns:	1fr;
+  grid-template-rows:	1fr;
+
+  place-items:	center;
+
   width: fit-content;
   height: fit-content;
 
   position: absolute;
   user-select: none;
+}
+
+.ui.header{
+  margin:0;
+  padding:0;
+}
+
+.on_text_edit {
+	cursor:		text;
+	border:		2px solid lightblue;
+	
+	background:	#ffeb6b;
 }
 
 </style>
