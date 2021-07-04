@@ -57,11 +57,13 @@ export default {
   },
   methods: {
     edit_text() {
-      this.root_element.contentEditable = true
+      let h1 = this.root_element.getElementsByTagName("h1")[0]
+      h1.contentEditable = true
       this.edit_text_flag = true;
     },
     quit_edit_text() {
-      this.root_element.contentEditable = false
+      let h1 = this.root_element.getElementsByTagName("h1")[0]
+      h1.contentEditable = false
       this.edit_text_flag = false;
     },
   },

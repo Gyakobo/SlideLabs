@@ -1,8 +1,7 @@
 <template>
-  <div class="work-sheet-wrapper">
+  <div id="components_tree_root_element" class="work-sheet-wrapper">
     <div class="work-sheet" :style="{width:width + 'px', height:height + 'px'}">
       <sl_container
-          ref="root_container"
           :components_tree_item="components_tree_root_item"
           :is_drag_resizer_enabled="false"
       ></sl_container>
@@ -24,7 +23,6 @@ export default {
   data (){
     return {
       project_settings: this.$store.state.project_settings,
-      root_element:null,
       components_tree_root_item:null,
     }
   },
@@ -40,6 +38,9 @@ export default {
   created() {
     this.components_tree_root_item = this.get_ctree_root()
   },
+  mounted() {
+    this.$store.state.components_tree_root_element = document.getElementById('components_tree_root_element')
+  }
 }
 </script>
 

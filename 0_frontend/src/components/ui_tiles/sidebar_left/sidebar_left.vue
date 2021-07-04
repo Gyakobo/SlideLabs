@@ -39,7 +39,7 @@ export default {
   },
   data (){
     return {
-      current_tab: 'tab_components_add',
+      current_tab: 'tab_slide_settings',
       tabs:[
         {
           name:'tab_slide_settings',

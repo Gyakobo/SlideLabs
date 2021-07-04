@@ -21,8 +21,8 @@ export default createStore({
       SCREEN_TYPES:screen_width_settings.SCREEN_TYPES,
       screen_type:screen_width_settings.SCREEN_TYPES.BIG,
 
-      sidebar_left_width: 300,
-      sidebar_right_width: 300,
+      sidebar_left_width: 320,
+      sidebar_right_width: 320,
 
       project_settings:{
         aspect_ratio_wh:16/9,
@@ -30,6 +30,7 @@ export default createStore({
 
       components_tree_root:null,
       active_component:null,
+      components_tree_root_element:null
     }
   }
 })
