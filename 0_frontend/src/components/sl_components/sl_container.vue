@@ -2,7 +2,8 @@
   <div
       :id="components_tree_item.id"
       class="sl container"
-      :style="dr_style"
+      :style="components_tree_item.params.root_element_style"
+      @pointerdown="set_active_component(components_tree_item, $event)"
   >
     <keep-alive v-for="child in components_tree_item.children" :key="child">
       <component :is="child.type" :components_tree_item="child"></component>
@@ -13,13 +14,15 @@
 <script>
 import sl_header from "./sl_header";
 import draggable_resizable_component_mixin from "../../utils/drag_resize/draggable_resizable_component_mixin";
+import components_tree_controller_mixin from "../../utils/components_tree/components_tree_controller_mixin";
 
 export default {
   components:{
     sl_header
   },
   mixins: [
-      draggable_resizable_component_mixin
+    draggable_resizable_component_mixin,
+    components_tree_controller_mixin
   ],
   data(){
     return {

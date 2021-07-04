@@ -14,7 +14,7 @@
 import navbar from "./ui_tiles/navbar";
 import sidebar_left from "./ui_tiles/sidebar_left/sidebar_left";
 import work_sheet from "./ui_tiles/work_sheet";
-import sidebar_right from "./ui_tiles/sidebar_right";
+import sidebar_right from "./ui_tiles/sidebar_right/sidebar_right";
 
 export default {
   components: {

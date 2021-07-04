@@ -281,8 +281,8 @@ DragResizer.prototype.pointermove_listener = function (event) {
 
   if (this.action === 'drag'){
     this.update_position(
-      this.start_x + dx,
-      this.start_y + dy
+      this.start_x + Math.round(dx),
+      this.start_y + Math.round(dy)
     )
   }
   else if(this.action === 'rotate'){
@@ -328,10 +328,13 @@ DragResizer.prototype.pointermove_listener = function (event) {
       height = cheight
     }
 
-    this.update_size(width, height)
+    this.update_size(
+      Math.round(width),
+      Math.round(height)
+    )
     this.update_position(
-      this.start_x + dleft,
-      this.start_y + dtop
+      this.start_x + Math.round(dleft),
+      this.start_y + Math.round(dtop)
     )
   }
 

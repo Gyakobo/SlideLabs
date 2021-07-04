@@ -7,20 +7,43 @@
       }"
   >
     <div class="sidebar-right">
-      <div>
-        {{text}}
+      <div class="ui icon buttons">
+        <button
+            v-for="tab in tabs"
+            :key="tab.name"
+            class="ui button"
+            :class="{
+              active: current_tab === tab.name
+            }"
+            @click="current_tab = tab.name"
+        >
+          <i class="icon" :class="tab.classes"></i>
+        </button>
       </div>
+      <keep-alive>
+        <component :is="current_tab"></component>
+      </keep-alive>
     </div>
   </div>
 </template>
 
 <script>
-import drag_resizer from "../../utils/drag_resize/drag_resizer";
+import tab_component_params from "./children/tab_component_params";
+import drag_resizer from "../../../utils/drag_resize/drag_resizer";
 
 export default {
+  components:{
+    tab_component_params
+  },
   data (){
     return {
-      text:'This is right sidebar',
+      current_tab: 'tab_component_params',
+      tabs:[
+        {
+          name:'tab_component_params',
+          classes:['cogs']
+        },
+      ]
     }
   },
   computed:{

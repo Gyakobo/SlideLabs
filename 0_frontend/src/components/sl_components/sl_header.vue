@@ -3,8 +3,8 @@
       :id="components_tree_item.id"
       class="sl header"
       :class="{active:components_tree_item.is_active}"
-      :style="dr_style"
-      @pointerdown="set_active_component(components_tree_item)"
+      :style="components_tree_item.params.root_element_style"
+      @pointerdown="set_active_component(components_tree_item, $event)"
       @dblclick="edit_text();"
       @keydown.enter.prevent
       @keyup.escape="quit_edit_text();"
@@ -66,6 +66,7 @@ export default {
     },
   },
   created() {
+    this.init_position(0, 0)
     this.init_size(200, 100)
   },
 }

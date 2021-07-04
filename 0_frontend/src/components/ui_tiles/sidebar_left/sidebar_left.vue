@@ -28,21 +28,21 @@
 </template>
 
 <script>
-import tab_components_settings from "./children/tab_components_settings";
+import tab_slide_settings from "./children/tab_slide_settings";
 import tab_components_tree from "./children/tab_components_tree";
 import tab_components_add from "./children/tab_components_add";
 import drag_resizer from "../../../utils/drag_resize/drag_resizer";
 
 export default {
   components:{
-    tab_components_settings, tab_components_tree, tab_components_add
+    tab_slide_settings, tab_components_tree, tab_components_add
   },
   data (){
     return {
       current_tab: 'tab_components_add',
       tabs:[
         {
-          name:'tab_components_settings',
+          name:'tab_slide_settings',
           classes:['edit']
         },
         {

@@ -11,6 +11,10 @@ let TreeItem = function (type, id, parent=null){
     this.children = []
     this.next_id = 1
   }
+
+  this.params = {
+    root_element_style:{}
+  }
 }
 
 TreeItem.prototype.add_child = function (type, id=null) {
@@ -41,7 +45,11 @@ export default {
     get_active_component(){
       return this.$store.state.active_component
     },
-    set_active_component(component){
+    set_active_component(component, event=null){
+      if (event != null){
+        event.stopPropagation()
+      }
+
       let state = this.$store.state
 
       if (state.active_component !== null){

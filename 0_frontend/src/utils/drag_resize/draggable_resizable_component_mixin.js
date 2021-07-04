@@ -5,11 +5,6 @@ export default {
     return {
       root_element:null,
       resizer: null,
-
-      dr_width:0,
-      dr_height:0,
-      dr_left:100,
-      dr_top:0,
     }
   },
   props:{
@@ -18,28 +13,16 @@ export default {
       default:true,
     }
   },
-  computed:{
-    dr_style(){
-      if (!this.is_drag_resizer_enabled){
-        return null
-      }
-
-      return {
-        width: this.dr_width + 'px',
-        height: this.dr_height + 'px',
-        left: this.dr_left + 'px',
-        top: this.dr_top + 'px'
-      }
-    },
-  },
   methods:{
     init_position(x,y){
-      this.dr_left = x
-      this.dr_top = y
+      let style = this.components_tree_item.params.root_element_style
+      style.left = x + 'px'
+      style.top = y + 'px'
     },
     init_size(w,h){
-      this.dr_width = w
-      this.dr_height = h
+      let style = this.components_tree_item.params.root_element_style
+      style.width = w + 'px'
+      style.height = h + 'px'
     }
   },
   mounted() {
@@ -56,14 +39,16 @@ export default {
     resizer.set_enable_cursor_styling(true)
     resizer.set_update_size_callback(
       (w,h) => {
-        this.dr_width = w
-        this.dr_height = h
+        let style = this.components_tree_item.params.root_element_style
+        style.width = w + 'px'
+        style.height = h + 'px'
       }
     )
     resizer.set_update_position_callback(
       (x,y) => {
-        this.dr_left = x
-        this.dr_top = y
+        let style = this.components_tree_item.params.root_element_style
+        style.left = x + 'px'
+        style.top = y + 'px'
       }
     )
     resizer.add_listeners()
