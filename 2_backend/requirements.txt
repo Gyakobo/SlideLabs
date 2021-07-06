@@ -1,0 +1,6 @@
+pymongo
+aiohttp
+aiohttp_cors
+cerberus
+requests
+ujson
