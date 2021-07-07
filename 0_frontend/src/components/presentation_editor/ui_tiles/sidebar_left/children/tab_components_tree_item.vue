@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import components_tree_controller_mixin from "../../../../utils/components_tree/components_tree_controller_mixin";
+import components_tree_controller_mixin from "../../../../../utils/components_tree/components_tree_controller_mixin";
 
 var tab_components_tree_item = {
   mixins:[

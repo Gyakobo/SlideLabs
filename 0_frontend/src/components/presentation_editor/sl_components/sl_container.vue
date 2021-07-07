@@ -13,8 +13,8 @@
 
 <script>
 import sl_header from "./sl_header";
-import draggable_resizable_component_mixin from "../../utils/drag_resize/draggable_resizable_component_mixin";
-import components_tree_controller_mixin from "../../utils/components_tree/components_tree_controller_mixin";
+import draggable_resizable_component_mixin from "../../../utils/drag_resize/draggable_resizable_component_mixin";
+import components_tree_controller_mixin from "../../../utils/components_tree/components_tree_controller_mixin";
 
 export default {
   components:{

@@ -1,12 +1,12 @@
 <template>
   <div
-      id="sidebar_right_wrapper"
+      id="sidebar_left_wrapper"
       style="min-width: 200px; max-width:400px"
       :style="{
         width:wrapper_width
       }"
   >
-    <div class="sidebar-right">
+    <div class="sidebar-left">
       <div class="ui icon buttons">
         <button
             v-for="tab in tabs"
@@ -28,40 +28,50 @@
 </template>
 
 <script>
-import tab_component_params from "./children/tab_component_params";
-import drag_resizer from "../../../utils/drag_resize/drag_resizer";
+import tab_slide_settings from "./children/tab_slide_settings";
+import tab_components_tree from "./children/tab_components_tree";
+import tab_components_add from "./children/tab_components_add";
+import drag_resizer from "../../../../utils/drag_resize/drag_resizer";
 
 export default {
   components:{
-    tab_component_params
+    tab_slide_settings, tab_components_tree, tab_components_add
   },
   data (){
     return {
-      current_tab: 'tab_component_params',
+      current_tab: 'tab_slide_settings',
       tabs:[
         {
-          name:'tab_component_params',
-          classes:['cogs']
+          name:'tab_slide_settings',
+          classes:['edit']
         },
+        {
+          name:'tab_components_tree',
+          classes:['sitemap']
+        },
+        {
+          name:'tab_components_add',
+          classes:['plus', 'square', 'outline']
+        }
       ]
     }
   },
   computed:{
     wrapper_width(){
-      return this.$store.state.sidebar_right_width + 'px'
+      return this.$store.state.sidebar_left_width + 'px'
     }
   },
   mounted() {
-    let wrapper = document.getElementById('sidebar_right_wrapper')
+    let wrapper = document.getElementById('sidebar_left_wrapper')
 
     let resizer = new drag_resizer.DragResizer()
     resizer.set_element(wrapper)
     resizer.read_constraints_from_style()
-    resizer.set_actions(['left'])
+    resizer.set_actions(['right'])
     resizer.set_enable_cursor_styling(true)
     resizer.set_update_size_callback(
         (w) => {
-          this.$store.state.sidebar_right_width = w
+          this.$store.state.sidebar_left_width = w
         }
     )
     resizer.add_listeners()
@@ -74,13 +84,13 @@ export default {
 </script>
 
 <style scoped>
-#sidebar_right_wrapper{
+#sidebar_left_wrapper{
   height: 100%;
 
-  border-left: 5px solid #999;
+  border-right: 5px solid #999;
 }
 
-.sidebar-right{
+.sidebar-left{
   display: flex;
   flex-direction: column;
 
