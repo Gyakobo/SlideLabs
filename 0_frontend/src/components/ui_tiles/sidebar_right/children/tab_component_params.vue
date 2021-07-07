@@ -7,7 +7,11 @@
     >
       <span>{{key}}:</span>
 
-      <input type="text" v-model="root_element_style[key]">
+      <input
+          type="text"
+          :value="root_element_style[key]"
+          @change="update_root_element_style(key, $event)"
+      >
     </div>
   </div>
 </template>
@@ -28,6 +32,11 @@ export default {
         return active_component.params.root_element_style
       }
     }
+  },
+  methods:{
+    update_root_element_style(key, event) {
+      this.root_element_style[key] = event.target.value
+    },
   }
 }
 </script>
