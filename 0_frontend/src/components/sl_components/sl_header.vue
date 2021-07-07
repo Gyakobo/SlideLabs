@@ -1,23 +1,26 @@
 <template>
-  <div
-      :id="components_tree_item.id"
-      class="sl header"
-      :class="{active:components_tree_item.is_active}"
-      :style="components_tree_item.params.root_element_style"
-      @pointerdown="set_active_component(components_tree_item, $event)"
-      @dblclick="edit_text();"
-      @keydown.enter.prevent
-      @keyup.escape="quit_edit_text();"
-      @keyup.enter="quit_edit_text();"
-  >
-    <h1
-        class="ui header"
-        :class="{on_text_edit: edit_text_flag}"
-        spellcheck=false
-    >
-      Example Text
-    </h1>
-  </div>
+	<div
+		ref = "text"
+
+		:id="components_tree_item.id"
+		class="sl header disable_select"
+		:class="{active:components_tree_item.is_active, on_text_edit: edit_text_flag}"
+		:style="components_tree_item.params.root_element_style"
+		
+		spellcheck=false
+
+		@pointerdown=	"set_active_component(components_tree_item, $event)"
+		@dblclick=	"edit_text()"
+		@keyup.escape = "quit_edit_text()"
+		
+		@keyup.tab.prevent
+		@keyup.enter.prevent = "quit_edit_text()"
+		
+		@keydown.tab.prevent
+		@keydown.enter.prevent
+	>
+		{{ content }}
+	</div>
 </template>
 
 <script>
@@ -30,9 +33,10 @@ export default {
     components_tree_controller_mixin
   ],
   data (){
-    return {
-      edit_text_flag:	false,
-    }
+	return {
+		edit_text_flag:		false,
+		content:		'Example_Text',
+	}
   },
   props:{
     components_tree_item:{
@@ -56,14 +60,18 @@ export default {
     }
   },
   methods: {
-    edit_text() {
-      this.root_element.contentEditable = true
-      this.edit_text_flag = true;
-    },
-    quit_edit_text() {
-      this.root_element.contentEditable = false
-      this.edit_text_flag = false;
-    },
+	edit_text() {
+		this.$refs.text.style.cursor = 'text';
+		this.$refs.text.contentEditable = true;
+		this.$refs.text.focus();
+		this.edit_text_flag = true;
+	},
+
+	quit_edit_text() {
+		this.$refs.text.contentEditable = false
+		this.edit_text_flag = false;
+	},
+
   },
   created() {
     this.init_position(0, 0)
@@ -75,24 +83,33 @@ export default {
 </script>
 
 <style scoped>
-.sl.header{
-  display:	grid;
 
-  grid-template-columns:	1fr;
-  grid-template-rows:	1fr;
-
-  place-items:	center;
-
-  width: fit-content;
-  height: fit-content;
-
-  position: absolute;
-  user-select: none;
+.disable_select {
+	user-select: none; /* supported by Chrome and Opera */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
 }
 
-.ui.header{
-  margin:0;
-  padding:0;
+.sl.header{
+	font-size:	150%;
+	font-family:	'sans-serif';
+
+	display:	grid;
+
+	grid-template-columns:	1fr;
+	grid-template-rows:	1fr;
+
+	place-items:	center;
+
+	/*width: fit-content;
+	height: fit-content;*/
+
+	position: absolute;
+	user-select: none;
+	
+	cursor:		text;
 }
 
 .on_text_edit {
