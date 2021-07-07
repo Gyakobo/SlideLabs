@@ -32,6 +32,23 @@ source venv/bin/activate
 pip install --upgrade pip && pip install -r requirements.txt
 ```
 
+## MongoDB
+
+```mongo
+use admin
+db.createUser(
+  {
+    user: "admin",
+    pwd: "admin",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
+```
+
+```bash
+sudo service mongod restart
+```
+
 ##Nginx
 
 * Run setup_nginx script 

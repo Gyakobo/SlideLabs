@@ -34,7 +34,7 @@ class Config(BaseConfig):
 #         DATABASE_PATH = 'sqlite:///%s/RES/main.sqlite' % PROJECT_DIR
 
     # ~~~~~~~~~~~~~~~~~~~~~START LOGGING~~~~~~~~~~~~~~~~~~~~~
-    LOGS_PATH = PROJECT_DIR + '/../z_logs/'
+    LOGS_PATH = PROJECT_DIR + '/z_logs/'
     ONE_LOG_MAX_BYTES = 1024 * 1024 * 32  # 32mb
     LOG_BACKUP_COUNT = 3  # so total 96 mb
     # ~~~~~~~~~~~~~~~~~~~~~END LOGGING~~~~~~~~~~~~~~~~~~~~~
