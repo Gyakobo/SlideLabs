@@ -1,7 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 
 //import page_frame from '@/components/page_frame'
-const page_frame = () => import('@/components/page_frame/page_frame')
+const app_frame = () => import('@/components/app_frame/app_frame')
 
 const file_manager = () => import('@/components/file_manager/file_manager')
 const presentation_editor = () => import('@/components/presentation_editor/presentation_editor')
@@ -25,10 +25,10 @@ export default createRouter({
     //   component:not_found_404,
     // },
     {
-      name:'page_frame',
+      name:'app_frame',
       path:'/',
+      component: app_frame,
       redirect:'presentation_editor',
-      component: page_frame,
       children:[
         {
           path: 'file_manager',
