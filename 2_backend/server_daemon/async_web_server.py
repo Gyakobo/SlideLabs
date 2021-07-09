@@ -12,14 +12,20 @@ import asyncio
 from aiohttp import web
 import aiohttp_cors
 
+from pymongo import MongoClient
+
 # ~~~~~~~~~~~~~start routes import~~~~~~~~~~~~~~~~~
 from server_daemon.routes.get_html_file_by_url import get_html_file_by_url
+
+from server_daemon.routes.projects.create_project import create_project
+from server_daemon.routes.projects.get_projects import get_projects
 # ~~~~~~~~~~~~~end routes import~~~~~~~~~~~~~~~~~
 
 from configs.config import CONFIG
 
 class ServerDaemon:
     def __init__(self):
+        self.mongo_client = MongoClient(CONFIG.MONGODB_HOST, CONFIG.MONGODB_PORT, maxPoolSize=CONFIG.MONGODB_MAX_POOL_SIZE)
 
         # ~~~~~~~~~~~
         loop = asyncio.new_event_loop()
@@ -30,6 +36,8 @@ class ServerDaemon:
         # ~~~~~~~~~~~~~~START SETTING ROUTES~~~~~~~~~~~~~~~~~
         routes_post = {
             '/backend/get_html_file_by_url/': get_html_file_by_url,
+            '/backend/create_project/': create_project,
+            '/backend/get_projects/': get_projects,
         }
         if CONFIG.IS_USE_CORS:
             cors = aiohttp_cors.setup(app, defaults={
@@ -59,7 +67,7 @@ class ServerDaemon:
         Thread(target=self._loop, daemon=False).start()
 
     def _loop(self):
-#         self.app['Session'] = Session
+        self.app['mongo_client'] = self.mongo_client
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
