@@ -7,43 +7,21 @@
       }"
   >
     <div class="sidebar-right">
-      <div class="ui icon buttons">
-        <button
-            v-for="tab in tabs"
-            :key="tab.name"
-            class="ui button"
-            :class="{
-              active: current_tab === tab.name
-            }"
-            @click="current_tab = tab.name"
-        >
-          <i class="icon" :class="tab.classes"></i>
-        </button>
-      </div>
-      <keep-alive>
-        <component :is="current_tab"></component>
-      </keep-alive>
+      <tab_file_params></tab_file_params>
     </div>
   </div>
 </template>
 
 <script>
-import tab_component_params from "./children/tab_component_params";
+import tab_file_params from "./children/tab_file_params";
 import drag_resizer from "../../../../utils/drag_resize/drag_resizer";
 
 export default {
   components:{
-    tab_component_params
+    tab_file_params
   },
   data (){
     return {
-      current_tab: 'tab_component_params',
-      tabs:[
-        {
-          name:'tab_component_params',
-          classes:['cogs']
-        },
-      ]
     }
   },
   computed:{

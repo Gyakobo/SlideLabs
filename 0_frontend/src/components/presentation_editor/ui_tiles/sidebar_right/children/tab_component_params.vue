@@ -1,5 +1,5 @@
 <template>
-  <div class="slide_components_tree">
+  <div class="main_wrapper">
     <div
         v-for="(item, key1) in active_component_params"
         :key="key1"
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style scoped>
-.slide_components_tree{
+.main_wrapper{
   background: #eee;
   color: var(--black);
 
