@@ -11,7 +11,7 @@
     >
       <img
           class="image"
-          src="/file_manager/sample_project2.jpg"
+          src="/file_manager/sample_project.jpg"
       >
 
       <div class="caption">
@@ -25,18 +25,10 @@
 
 export default {
   data(){
-    return {
-      projects:[
-        {
-          'title':'Sample project',
-        },
-        {
-          'title':'Sample project 2',
-        },
-        {
-          'title':'Sample project 3',
-        },
-      ]
+  },
+  computed:{
+    projects(){
+      return this.$store.state.file_manager.projects
     }
   },
   methods:{
@@ -45,6 +37,9 @@ export default {
       window.open(url,'_blank')
     },
   },
+  created() {
+    this.$store.dispatch('get_projects')
+  }
 }
 </script>
 

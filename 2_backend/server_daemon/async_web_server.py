@@ -35,9 +35,9 @@ class ServerDaemon:
 
         # ~~~~~~~~~~~~~~START SETTING ROUTES~~~~~~~~~~~~~~~~~
         routes_post = {
-            '/backend/get_html_file_by_url/': get_html_file_by_url,
-            '/backend/create_project/': create_project,
-            '/backend/get_projects/': get_projects,
+            '/backend/get_html_file_by_url': get_html_file_by_url,
+            '/backend/create_project': create_project,
+            '/backend/get_projects': get_projects,
         }
         if CONFIG.IS_USE_CORS:
             cors = aiohttp_cors.setup(app, defaults={
