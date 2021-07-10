@@ -25,6 +25,12 @@
 import draggable_resizable_component_mixin from "../../../utils/drag_resize/draggable_resizable_component_mixin";
 import components_tree_controller_mixin from "../../../utils/components_tree/components_tree_controller_mixin";
 
+let actions = {
+  not_active:['drag'],
+  active_no_edit:['top', 'bottom', 'left', 'right', 'drag'],
+  active_edit:[],
+}
+
 export default {
   mixins:[
     draggable_resizable_component_mixin,
@@ -50,10 +56,24 @@ export default {
   watch:{
     is_active(new_value){
       if(new_value){
-        this.resizer.set_actions(['top', 'bottom', 'left', 'right', 'drag'])
+        if(this.edit_text_flag){
+          this.resizer.set_actions(actions.active_edit)
+        }else{
+          this.resizer.set_actions(actions.active_no_edit)
+        }
       }else{
-        this.resizer.set_actions(['drag'])
+        this.resizer.set_actions(actions.not_active)
         this.quit_edit_text()
+      }
+    },
+    edit_text_flag(new_value){
+      if (!this.is_active){
+        return
+      }
+      if(new_value){
+        this.resizer.set_actions(actions.active_edit)
+      }else{
+        this.resizer.set_actions(actions.active_no_edit)
       }
     }
   },

@@ -1,17 +1,24 @@
 <template>
   <div class="slide_components_tree">
     <div
-        v-for="key in Object.keys(root_element_style)"
-        :key="key"
-        class="item"
+        v-for="(item, key1) in active_component_params"
+        :key="key1"
+        class="params_group"
     >
-      <span>{{key}}:</span>
-
-      <input
-          type="text"
-          :value="root_element_style[key]"
-          @change="update_root_element_style(key, $event)"
+      <h3>{{key1}}</h3>
+      <div
+          v-for="(item2, key2) in item"
+          :key="key2"
+          class="item"
       >
+        <span>{{key2}}:</span>
+
+        <input
+            type="text"
+            :value="item2"
+            @change="update_active_component_params(key1, key2, $event)"
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -23,19 +30,19 @@ export default {
     }
   },
   computed:{
-    root_element_style(){
+    active_component_params(){
       let active_component = this.$store.state.active_component
 
       if (active_component === null){
         return {}
       } else {
-        return active_component.params.root_element_style
+        return active_component.params
       }
     }
   },
   methods:{
-    update_root_element_style(key, event) {
-      this.root_element_style[key] = event.target.value
+    update_active_component_params(key1, key2, event) {
+      this.active_component_params[key1][key2] = event.target.value
     },
   }
 }
@@ -43,16 +50,18 @@ export default {
 
 <style scoped>
 .slide_components_tree{
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  height: 100%;
-
   background: #eee;
   color: var(--black);
 
   font-size: 20px;
+  height: 100%;
+}
+
+.params_group{
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
 
   padding: 5px 10px;
 }
