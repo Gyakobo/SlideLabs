@@ -14,10 +14,8 @@
 		@keyup.escape="quit_edit_text()"
 		
 		@keyup.tab.prevent
-		@keyup.enter.prevent="quit_edit_text()"
 		
 		@keydown.tab.prevent
-		@keydown.enter.prevent
 	>
 		{{ content }}
 	</div>
@@ -94,12 +92,14 @@ export default {
 	font-size:	150%;
 	font-family:	'sans-serif';
 
-	display:	grid;
+	display:	inline-block;
 
+	word-break:	break-all;
+
+	/*display:	grid;
 	grid-template-columns:	1fr;
 	grid-template-rows:	1fr;
-
-	place-items:	center;
+	place-items:	center;*/
 
 	/*width: fit-content;
 	height: fit-content;*/
@@ -108,6 +108,10 @@ export default {
 	user-select: none;
 	
 	cursor:		text;
+}
+
+.sl.header pre {
+	white-space:	pre-wrap;
 }
 
 .on_text_edit {
