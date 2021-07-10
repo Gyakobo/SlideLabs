@@ -34,9 +34,7 @@ export default {
 
     let resizer = new drag_resizer.DragResizer()
     resizer.set_element(this.root_element)
-    resizer.enable_default_constraints()
     resizer.set_actions(['drag'])
-    resizer.set_enable_cursor_styling(true)
     resizer.set_update_size_callback(
       (w,h) => {
         let style = this.components_tree_item.params.root_element_style

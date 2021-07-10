@@ -27,7 +27,6 @@ export default {
 #work-area{
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
 
   width: 100%;
   height: calc(100vh - 40px);

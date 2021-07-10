@@ -1,4 +1,4 @@
-/* eslint-disable */
+import $ from 'jquery';
 
 let backend_url
 if (window.location.hostname === 'slidelab.ru'){

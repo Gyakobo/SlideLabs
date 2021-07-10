@@ -1,7 +1,6 @@
 <template>
   <div
       id="sidebar_left_wrapper"
-      style="min-width: 200px; max-width:400px"
       :style="{
         width:wrapper_width
       }"
@@ -66,9 +65,11 @@ export default {
 
     let resizer = new drag_resizer.DragResizer()
     resizer.set_element(wrapper)
-    resizer.read_constraints_from_style()
+    resizer.set_constraints({
+      min_width:200,
+      max_width:400
+    })
     resizer.set_actions(['right'])
-    resizer.set_enable_cursor_styling(true)
     resizer.set_update_size_callback(
         (w) => {
           this.$store.state.sidebar_left_width = w

@@ -29,7 +29,7 @@ export default {
   computed:{
     width(){
       let state = this.$store.state
-      return state.screen_width - state.sidebar_left_width - state.sidebar_right_width - 30.5
+      return state.screen_width - state.sidebar_left_width - state.sidebar_right_width - 30
     },
     height(){
       return this.width / this.project_settings.aspect_ratio_wh

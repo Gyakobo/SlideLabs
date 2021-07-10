@@ -1,3 +1,7 @@
+let constrain = function (v, v_min, v_max){
+  return Math.max(v_min, Math.min(v_max, v))
+}
+
 let DragResizer = function(){
   this.element = null
   this.actions = null
@@ -5,10 +9,18 @@ let DragResizer = function(){
   this.action = null
   this.pointer_id = null
 
-  this.constrain_width = null
-  this.constrain_height = null
+  this.min_width = 0
+  this.max_width = Infinity
+  this.min_height = 0
+  this.max_height = Infinity
+  this.constrain_width = function (width) {
+    return constrain(width, this.min_width, this.max_width)
+  }
+  this.constrain_height = function (height) {
+    return constrain(height, this.min_height, this.max_height)
+  }
 
-  this.enable_cursor_styling = false
+  this.enable_cursor_styling = true
 
   this.start_x = 0
   this.start_y = 0
@@ -36,24 +48,6 @@ DragResizer.prototype.set_enable_cursor_styling = function (is_enable) {
   this.enable_cursor_styling = is_enable
 }
 
-let constrain = function (v, v_min, v_max){
-  return Math.max(v_min, Math.min(v_max, v))
-}
-DragResizer.prototype._add_constraint_functions = function () {
-  this.constrain_width = function (width) {
-    return constrain(width, this.min_width, this.max_width)
-  }
-  this.constrain_height = function (height) {
-    return constrain(height, this.min_height, this.max_height)
-  }
-}
-DragResizer.prototype.enable_default_constraints = function () {
-  this.min_width = 0
-  this.max_width = Infinity
-  this.min_height = 0
-  this.max_height = Infinity
-  this._add_constraint_functions()
-}
 DragResizer.prototype.read_constraints_from_style = function () {
   let style = this.element.style
 
@@ -62,8 +56,16 @@ DragResizer.prototype.read_constraints_from_style = function () {
     this.max_width = (style.maxWidth !== '') ? parseFloat(style.maxWidth) : Infinity
     this.min_height = (style.minHeight !== '') ? parseFloat(style.minHeight) : 0
     this.max_height = (style.maxHeight !== '') ? parseFloat(style.maxHeight) : Infinity
+  }
+}
+DragResizer.prototype.set_constraints = function (constraints) {
+  let constraint_names = ['min_width', 'max_width', 'min_height', 'max_height']
 
-    this._add_constraint_functions()
+  for (let i in constraint_names){
+    let name = constraint_names[i]
+    if(Object.prototype.hasOwnProperty.call(constraints, name)){
+      this[name] = constraints[name]
+    }
   }
 }
 
@@ -313,20 +315,17 @@ DragResizer.prototype.pointermove_listener = function (event) {
       height += dy
     }
 
-    if (this.constrain_width !== null){
-      let cwidth = this.constrain_width(width)
-      if (dleft !== 0){
-        dleft += width - cwidth
-      }
-      width = cwidth
+    let cwidth = this.constrain_width(width)
+    if (dleft !== 0){
+      dleft += width - cwidth
     }
-    if (this.constrain_height !== null){
-      let cheight = this.constrain_height(height)
-      if (dtop !== 0){
-        dtop += height - cheight
-      }
-      height = cheight
+    width = cwidth
+
+    let cheight = this.constrain_height(height)
+    if (dtop !== 0){
+      dtop += height - cheight
     }
+    height = cheight
 
     this.update_size(
       Math.round(width),

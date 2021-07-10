@@ -9,13 +9,6 @@ export default {
     }
   },
   methods: {
-    get_screen_width(){
-      var de = document.body.parentNode;
-      var db = document.body;
-      if(window.opera)return db.clientWidth;
-      if (document.compatMode=='CSS1Compat') return de.clientWidth;
-      else return db.clientWidth;
-    },
     calc_screen_type(){
       var w = this.screen_width
 
@@ -29,8 +22,7 @@ export default {
     },
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     on_resize() {
-      // var w = window.innerWidth
-      var w = this.get_screen_width()
+      var w = window.innerWidth
 
       this.screen_width = w
       this.$store.state.screen_width = w
