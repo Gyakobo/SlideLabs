@@ -27,6 +27,11 @@ class Config(BaseConfig):
     IS_USE_CORS = not IS_PROD_SERVER
     # ~~~~~~~~~~END WEB SERVER~~~~~~~~~~~~~~~~~~~~~
 
+    MONGODB_HOST = 'localhost'
+    MONGODB_PORT = 27017
+    MONGODB_MAX_POOL_SIZE = 200
+    DATABASE_NAME = 'slidelab'
+
     #database
 #     if IS_PROD_SERVER:
 #         DATABASE_PATH = 'postgresql+psycopg2://myuser:Whiterabbit777@localhost/nut_nut'

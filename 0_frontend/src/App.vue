@@ -1,9 +1,8 @@
 <template>
-  <home/>
+  <router-view/>
 </template>
 
 <script>
-import home from './components/home.vue'
 import screen_width_mixin from "./utils/screen_width/screen_width_mixin";
 
 export default {
@@ -11,9 +10,6 @@ export default {
   mixins:[
     screen_width_mixin
   ],
-  components: {
-    home
-  },
 }
 </script>
 
