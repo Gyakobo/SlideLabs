@@ -66,7 +66,6 @@ export default {
   height: 100%;
 
   background: #eee;
-  color: var(--blue-dark);
 
   font-size: 20px;
 }

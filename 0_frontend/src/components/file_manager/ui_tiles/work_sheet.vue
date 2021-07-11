@@ -7,7 +7,8 @@
         v-for="project in projects"
         :key="project.title"
         class="card"
-        @click="$router.push({name:'presentation_editor'})"
+        @click="$store.commit('set_active_project', project)"
+        @dblclick="$router.push({name:'presentation_editor'})"
         @mouseup.middle="open_new_tab($router.resolve({name:'presentation_editor'}).fullPath)"
     >
       <img

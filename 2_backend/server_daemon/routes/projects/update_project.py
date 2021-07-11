@@ -11,15 +11,18 @@ request_schema = {
         'type': 'string',
         'required': True,
     },
-    'title': {
-        'type': 'string',
+    'changes': {
+        'type': 'dict',
         'required': True,
     },
+    'assert_changed': {
+        'type': 'string',
+    }
 }
 request_validator = Validator(request_schema)
 # ~~~~~~END REQUEST VALIDATION SCHEMAS~~~~~~~~
 
-async def create_project(request):
+async def update_project(request):
     r_json = await request.json()
 
     # ~~~~~~START VALIDATION~~~~~~~~
@@ -30,16 +33,18 @@ async def create_project(request):
     client = request.app['mongo_client']
     db = client[CONFIG.DATABASE_NAME]
 
-    project = {
-        'slide_ids': []
-    }
-    project.update(r_json)
-
-    try:
-        db.projects.insert_one(project)
-    except pymongo.errors.DuplicateKeyError:
-        return web.json_response({
-            'error': f'project_id "{r_json["project_id"]}" already exists!'
-        })
+    res = db.projects.update_one(
+        {
+            'project_id': r_json['project_id']
+        },
+        {
+            '$set': r_json['changes']
+        },
+        upsert=False
+    )
+    if res.matched_count == 0:
+        return web.json_response({'error': 'No such project!'})
+    if res.modified_count == 0 and 'assert_changed' in r_json:
+        return web.json_response({'error': 'Project not modified!'})
 
     return web.json_response({'success': ''})

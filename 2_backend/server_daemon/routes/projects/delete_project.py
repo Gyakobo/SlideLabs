@@ -11,15 +11,11 @@ request_schema = {
         'type': 'string',
         'required': True,
     },
-    'title': {
-        'type': 'string',
-        'required': True,
-    },
 }
 request_validator = Validator(request_schema)
 # ~~~~~~END REQUEST VALIDATION SCHEMAS~~~~~~~~
 
-async def create_project(request):
+async def delete_project(request):
     r_json = await request.json()
 
     # ~~~~~~START VALIDATION~~~~~~~~
@@ -30,16 +26,8 @@ async def create_project(request):
     client = request.app['mongo_client']
     db = client[CONFIG.DATABASE_NAME]
 
-    project = {
-        'slide_ids': []
-    }
-    project.update(r_json)
-
-    try:
-        db.projects.insert_one(project)
-    except pymongo.errors.DuplicateKeyError:
-        return web.json_response({
-            'error': f'project_id "{r_json["project_id"]}" already exists!'
-        })
+    res = db.projects.delete_one({'project_id': r_json['project_id']})
+    if res.deleted_count == 0:
+        return web.json_response({'error': 'No such project!'})
 
     return web.json_response({'success': ''})

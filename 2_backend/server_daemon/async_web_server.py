@@ -19,6 +19,14 @@ from server_daemon.routes.get_html_file_by_url import get_html_file_by_url
 
 from server_daemon.routes.projects.create_project import create_project
 from server_daemon.routes.projects.get_projects import get_projects
+from server_daemon.routes.projects.update_project import update_project
+from server_daemon.routes.projects.delete_project import delete_project
+
+
+from server_daemon.routes.slides.create_slide import create_slide
+from server_daemon.routes.slides.get_slides import get_slides
+from server_daemon.routes.slides.update_slide import update_slide
+from server_daemon.routes.slides.delete_slide import delete_slide
 # ~~~~~~~~~~~~~end routes import~~~~~~~~~~~~~~~~~
 
 from configs.config import CONFIG
@@ -36,8 +44,16 @@ class ServerDaemon:
         # ~~~~~~~~~~~~~~START SETTING ROUTES~~~~~~~~~~~~~~~~~
         routes_post = {
             '/backend/get_html_file_by_url': get_html_file_by_url,
+
             '/backend/create_project': create_project,
             '/backend/get_projects': get_projects,
+            '/backend/update_project': update_project,
+            '/backend/delete_project': delete_project,
+
+            '/backend/create_slide': create_slide,
+            '/backend/get_slides': get_slides,
+            '/backend/update_slide': update_slide,
+            '/backend/delete_slide': delete_slide,
         }
         if CONFIG.IS_USE_CORS:
             cors = aiohttp_cors.setup(app, defaults={
