@@ -20,29 +20,27 @@
           <i class="icon" :class="tab.classes"></i>
         </button>
       </div>
-      <keep-alive>
-        <component :is="current_tab"></component>
-      </keep-alive>
+      <component :is="current_tab"></component>
     </div>
   </div>
 </template>
 
 <script>
-import tab_slide_settings from "./children/tab_slide_settings";
+import tab_project_settings from "./children/tab_project_settings";
 import tab_components_tree from "./children/tab_components_tree";
 import tab_components_add from "./children/tab_components_add";
 import drag_resizer from "../../../../utils/drag_resize/drag_resizer";
 
 export default {
   components:{
-    tab_slide_settings, tab_components_tree, tab_components_add
+    tab_project_settings, tab_components_tree, tab_components_add
   },
   data (){
     return {
-      current_tab: 'tab_slide_settings',
+      current_tab: 'tab_project_settings',
       tabs:[
         {
-          name:'tab_slide_settings',
+          name:'tab_project_settings',
           classes:['edit']
         },
         {

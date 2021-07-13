@@ -1,14 +1,4 @@
-import { backend_request } from "../utils/transport/transport"
-
-function on_http_error(){
-  alert('No connection with server!')
-}
-
-function check_backend_error(r_json){
-  if (Object.prototype.hasOwnProperty.call(r_json, 'error')){
-    alert(r_json['error'])
-  }
-}
+import { backend_request, on_http_error, check_backend_error } from "../utils/transport/transport"
 
 export default {
   state:{
@@ -21,17 +11,6 @@ export default {
     }
   },
   actions:{
-    async get_projects(context) {
-      await backend_request(
-        'get_projects',
-        {},
-        (r_json) => {
-          context.state.projects = r_json.projects
-        },
-        on_http_error,
-      )
-    },
-
     async create_project(context, data) {
       await backend_request(
         'create_project',
@@ -44,17 +23,50 @@ export default {
       )
     },
 
+    async get_projects(context) {
+      await backend_request(
+        'get_projects',
+        {},
+        (r_json) => {
+          if (check_backend_error(r_json)){
+            context.state.projects = r_json.projects
+          }
+        },
+        on_http_error,
+      )
+    },
+
     async update_active_project(context, data) {
+      let data_json = {
+        changes: context.state.active_project
+      }
+      if (data !== undefined && Object.prototype.hasOwnProperty.call(data, 'last_project_id')){
+        data_json['project_id'] = data.last_project_id
+        data_json['assert_changed'] = ''
+      } else {
+        data_json['project_id'] = context.state.active_project.project_id
+      }
+
       await backend_request(
         'update_project',
+        data_json,
+        check_backend_error,
+        on_http_error,
+      )
+    },
+
+    async delete_active_project(context) {
+      await backend_request(
+        'delete_project',
         {
-          project_id: data.last_project_id,
-          changes: context.state.active_project,
+          project_id: context.state.active_project.project_id,
         },
         check_backend_error,
         on_http_error,
       )
-    }
+      context.state.active_project = null
+      await context.dispatch('get_projects')
+    },
 
   }
 }

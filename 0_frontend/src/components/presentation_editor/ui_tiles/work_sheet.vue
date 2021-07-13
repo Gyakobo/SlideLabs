@@ -22,11 +22,19 @@ export default {
   ],
   data (){
     return {
-      project_settings: this.$store.state.project_settings,
       components_tree_root_item:null,
     }
   },
   computed:{
+    project_settings(){
+      let current_project = this.$store.state.presentation_editor.current_project
+      if (current_project === null){
+        return {
+          aspect_ratio_wh: 16/9
+        }
+      }
+      return current_project.settings
+    },
     width(){
       let state = this.$store.state
       return state.screen_width - state.sidebar_left_width - state.sidebar_right_width - 30

@@ -19,6 +19,9 @@ export default {
     return {
     }
   },
+  beforeCreate() {
+    this.$store.state.file_manager.active_project = null
+  }
 }
 </script>
 

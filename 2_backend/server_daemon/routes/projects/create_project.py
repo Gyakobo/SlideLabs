@@ -31,15 +31,33 @@ async def create_project(request):
     db = client[CONFIG.DATABASE_NAME]
 
     project = {
-        'slide_ids': []
+        'slide_ids': [],
+        'settings': {
+            'aspect_ratio_wh': 16/9
+        }
     }
     project.update(r_json)
 
+    project_id = r_json['project_id']
+
     try:
-        db.projects.insert_one(project)
+        res = db.projects.insert_one(project)
     except pymongo.errors.DuplicateKeyError:
         return web.json_response({
-            'error': f'project_id "{r_json["project_id"]}" already exists!'
+            'error': f'project_id "{project_id}" already exists!'
         })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    res = db.slides.insert_one({
+        'components_tree': None,
+    })
+    slide_id = str(res.inserted_id)
+
+    db.projects.update_one(
+        {'project_id': project_id},
+        {
+            '$set': {'slide_ids': [slide_id]}
+        }
+    )
 
     return web.json_response({'success': ''})

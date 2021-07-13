@@ -7,9 +7,9 @@
         v-for="project in projects"
         :key="project.title"
         class="card"
-        @click="$store.commit('set_active_project', project)"
-        @dblclick="$router.push({name:'presentation_editor'})"
-        @mouseup.middle="open_new_tab($router.resolve({name:'presentation_editor'}).fullPath)"
+        @pointerdown="$store.commit('set_active_project', project)"
+        @dblclick="open_presentation_editor()"
+        @pointerup.middle="open_presentation_editor(true)"
     >
       <img
           class="image"
@@ -21,15 +21,38 @@
         {{project.title}}
       </div>
     </div>
+
+    <div
+        class="card"
+        style="height: 275px"
+        @mouseenter="is_add_project_card_hover = true"
+        @mouseleave="is_add_project_card_hover = false"
+        @pointerdown="dialog_create_project_start()"
+    >
+      <i
+          class="huge plus icon"
+          :style="{opacity: is_add_project_card_hover ? '1.0' : '0.5'}"
+      ></i>
+    </div>
+
+    <dialog_create_project
+        :is_show="is_show_dialog_create_project"
+        @dialog_exit="on_dialog_create_project_exit($event)"
+    ></dialog_create_project>
   </div>
 </template>
 
 <script>
+import dialog_create_project from "./dialog_create_project";
 
 export default {
+  components:{
+    dialog_create_project
+  },
   data(){
     return {
-
+      is_add_project_card_hover:false,
+      is_show_dialog_create_project:false,
     }
   },
   computed:{
@@ -39,13 +62,43 @@ export default {
     },
     projects(){
       return this.$store.state.file_manager.projects
+    },
+    active_project(){
+      return this.$store.state.file_manager.active_project
     }
   },
   methods:{
-    open_new_tab(path){
-      let url = window.location.origin + path
-      window.open(url,'_blank')
+    open_presentation_editor(new_tab=false){
+      if (this.active_project === null){
+        alert('Project not selected!')
+        return
+      }
+
+      let route_object = {
+        name:'presentation_editor',
+        params: {
+          project_id: this.active_project.project_id
+        }
+      }
+
+      if (new_tab){
+        let path = this.$router.resolve(route_object).fullPath
+        let url = window.location.origin + path
+        window.open(url,'_blank')
+      } else {
+        this.$router.push(route_object)
+      }
     },
+    dialog_create_project_start(){
+      this.is_show_dialog_create_project = true
+    },
+    on_dialog_create_project_exit(is_ok){
+      this.is_show_dialog_create_project = false
+
+      if(is_ok){
+        this.$store.dispatch('get_projects')
+      }
+    }
   },
   created() {
     this.$store.dispatch('get_projects')
@@ -71,7 +124,7 @@ export default {
 .card{
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 
   width: 250px;

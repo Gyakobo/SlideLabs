@@ -28,7 +28,7 @@ export default createRouter({
       name:'app_frame',
       path:'/',
       component: app_frame,
-      redirect:'presentation_editor',
+      redirect:'file_manager',
       children:[
         {
           path: 'file_manager',
@@ -36,7 +36,7 @@ export default createRouter({
           component: file_manager,
         },
         {
-          path: 'presentation_editor',
+          path: 'presentation_editor/:project_id',
           name: 'presentation_editor',
           component: presentation_editor,
         },

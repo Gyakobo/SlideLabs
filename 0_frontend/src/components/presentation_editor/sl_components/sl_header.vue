@@ -90,8 +90,13 @@ export default {
     },
   },
   created() {
-    this.init_position(0, 0)
-    this.init_size(200, 100)
+    let style = this.components_tree_item.params.root_element_style
+    let left = Object.prototype.hasOwnProperty.call(style, 'left') ? parseInt(style['left']) : 0
+    let top = Object.prototype.hasOwnProperty.call(style, 'top') ? parseInt(style['top']) : 0
+    let width = Object.prototype.hasOwnProperty.call(style, 'width') ? parseInt(style['width']) : 200
+    let height = Object.prototype.hasOwnProperty.call(style, 'height') ? parseInt(style['height']) : 100
+    this.init_position(left, top)
+    this.init_size(width, height)
   },
 }
 

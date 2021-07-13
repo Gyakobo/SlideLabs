@@ -26,10 +26,6 @@ export default {
   },
   created() {
     this.components_tree_root_item = this.get_ctree_root()
-
-    this.add_h1()
-    this.add_h1()
-    this.add_h1()
   },
 }
 </script>

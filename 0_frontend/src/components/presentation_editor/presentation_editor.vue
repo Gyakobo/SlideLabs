@@ -1,8 +1,8 @@
 <template>
   <div id="work-area">
-    <sidebar_left></sidebar_left>
-    <work_sheet></work_sheet>
-    <sidebar_right></sidebar_right>
+    <sidebar_left v-if="is_slide_loaded"></sidebar_left>
+    <work_sheet v-if="is_slide_loaded"></work_sheet>
+    <sidebar_right v-if="is_slide_loaded"></sidebar_right>
   </div>
 </template>
 
@@ -17,8 +17,24 @@ export default {
   },
   data(){
     return {
+      is_slide_loaded: false
     }
   },
+  async created() {
+    await this.$store.dispatch('get_project_by_id', {project_id:this.$route.params.project_id})
+
+    let current_project = this.$store.state.presentation_editor.current_project
+    if (current_project === null){
+      return
+    }
+    await this.$store.dispatch('get_slide_by_id', {slide_id:current_project.slide_ids[0]})
+
+    this.is_slide_loaded = true
+
+    setInterval(() => {
+      this.$store.dispatch('update_current_slide')
+    }, 2000)
+  }
 }
 </script>
 

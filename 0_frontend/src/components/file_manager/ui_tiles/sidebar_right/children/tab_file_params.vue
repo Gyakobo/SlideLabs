@@ -6,7 +6,7 @@
     <div v-else class="params_group">
       <h3>Параметры проекта</h3>
       <div
-          v-for="(item, key) in active_project"
+          v-for="key in project_settings_keys"
           :key="key"
           class="item"
       >
@@ -15,10 +15,10 @@
         <input
             v-if="is_edit_mode"
             type="text"
-            :value="item"
-            @change="active_project[key] = $event.target.value"
+            :value="active_project[key]"
+            @change="on_prop_change(key, $event)"
         >
-        <span v-else>{{item}}</span>
+        <span v-else>{{active_project[key]}}</span>
 
 
       </div>
@@ -36,6 +36,16 @@
       >
         Редактировать
       </div>
+
+      <div class="flex-spacer">
+      </div>
+
+      <div
+          class="ui big basic red button"
+          @click="delete_project()"
+      >
+        Удалить проект
+      </div>
     </div>
 
 
@@ -49,6 +59,7 @@ export default {
     return {
       is_edit_mode:false,
       last_project_id:'',
+      project_settings_keys: ['project_id', 'title'],
     }
   },
   computed:{
@@ -62,6 +73,10 @@ export default {
     }
   },
   methods:{
+    on_prop_change(key, event){
+      console.log('on_change', key, event.target.value)
+      this.active_project[key] = event.target.value
+    },
     start_edit(){
       this.is_edit_mode = true
       this.last_project_id = this.active_project.project_id
@@ -73,6 +88,17 @@ export default {
         this.$store.dispatch('update_active_project', {last_project_id:this.last_project_id})
       }
     },
+    delete_project(){
+      if (this.active_project === null) {
+        alert('Проект не выбран!');
+      }
+
+      let is_confirm = confirm(`Вы уверены, что хотите удалить проект "${this.active_project.title}"?`)
+
+      if (is_confirm){
+        this.$store.dispatch('delete_active_project')
+      }
+    }
   }
 }
 </script>
@@ -96,6 +122,7 @@ export default {
   flex-direction: column;
 
   width: 100%;
+  height: 100%;
 
   padding: 5px 10px;
 }
@@ -111,6 +138,10 @@ export default {
 
 .item input{
   width: 150px;
+}
+
+.flex-spacer{
+  flex-grow: 1;
 }
 
 </style>

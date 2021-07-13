@@ -15,3 +15,15 @@ export async function backend_request(rel_url, data_json, on_success_f, on_error
 
   await $.post(url, data_string).done(on_success_f).fail(on_error_f)
 }
+
+export function on_http_error(){
+  alert('No connection with server!')
+}
+
+export function check_backend_error(r_json){
+  if (Object.prototype.hasOwnProperty.call(r_json, 'error')){
+    alert(r_json['error'])
+    return false
+  }
+  return true
+}

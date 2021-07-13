@@ -1,22 +1,22 @@
 <template>
   <div class="navbar">
-    <router-link
-        v-for="section in menu_sections"
-        :key="section.title"
-        :to="{name:section.route_name}"
-        custom
-        v-slot="{ href, route, navigate, isActive }"
-    >
-      <div
+    <div
         class="menu_item"
-        :class="{active:isActive}"
-        :href="href"
-        @click="navigate"
-        @mouseup.middle="open_new_tab(route.fullPath)"
-      >
-        {{section.title}}
-      </div>
-    </router-link>
+        @click="$router.push({name:'file_manager'})"
+        @mouseup.middle="open_new_tab({name:'file_manager'})"
+        :class="{
+          active: $route.path.startsWith('/file_manager')
+        }"
+    >
+      <i class="home icon"></i>
+    </div>
+
+    <div
+        v-if="is_show_project_name"
+        class="project_title"
+    >
+      {{current_project.title}}
+    </div>
   </div>
 </template>
 
@@ -24,20 +24,19 @@
 export default {
   data (){
     return {
-      menu_sections:[
-        {
-          title:'Файлы проектов',
-          route_name:'file_manager',
-        },
-        {
-          title:'Редактор презентаций',
-          route_name:'presentation_editor',
-        },
-      ]
+    }
+  },
+  computed:{
+    current_project(){
+      return this.$store.state.presentation_editor.current_project
+    },
+    is_show_project_name(){
+      return this.$route.path.startsWith('/presentation_editor') && this.current_project !== null
     }
   },
   methods:{
-    open_new_tab(path){
+    open_new_tab(route_query){
+      let path = this.$router.resolve(route_query).fullPath
       let url = window.location.origin + path
       window.open(url,'_blank')
     },
@@ -67,10 +66,20 @@ export default {
   padding: 0 10px;
   cursor: pointer;
 }
+.menu_item:hover{
+  background: rgba(0,0,0,0.05);
+}
 
 .menu_item.active{
-  background: rgba(0,0,0,0.1);
-  text-decoration: underline;
+  background: rgba(0,0,0,0.15);
+}
+.menu_item.active:hover{
+  background: rgba(0,0,0,0.2);
+}
+
+.project_title{
+  width: 90%;
+  text-align: center;
 }
 
 </style>

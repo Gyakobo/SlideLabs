@@ -35,12 +35,15 @@ async def update_slide(request):
     db = client[CONFIG.DATABASE_NAME]
 
     slide_id = ObjectId(r_json['slide_id'])
+    changes = r_json['changes']
+    if '_id' in changes:
+        del changes['_id']
     res = db.slides.update_one(
         {
             '_id': slide_id
         },
         {
-            '$set': r_json['changes']
+            '$set': changes
         },
         upsert=False
     )

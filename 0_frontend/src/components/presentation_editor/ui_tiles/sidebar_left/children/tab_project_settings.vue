@@ -1,11 +1,14 @@
 <template>
   <div class="slide_components_tree">
-    <div class="item">
+    <div v-if="project_settings !== null" class="item">
       <span>
         Соотношение сторон
       </span>
 
-      <select v-model="project_settings.aspect_ratio_wh">
+      <select
+          :value="project_settings.aspect_ratio_wh"
+          @change="update_project_settings('aspect_ratio_wh', $event.target.value)"
+      >
         <option v-for="option in aspect_ratio_wh_options" :key="option.text" :value="option.value">
           {{ option.text }}
         </option>
@@ -31,7 +34,6 @@ import html2pdf from 'html2pdf.js'
 export default {
   data (){
     return {
-      project_settings:this.$store.state.project_settings,
       aspect_ratio_wh_options: [
         { text: '4:3', value: 4/3 },
         { text: '16:9', value: 16/9 },
@@ -39,7 +41,21 @@ export default {
       ]
     }
   },
+  computed:{
+    project_settings(){
+      let current_project = this.$store.state.presentation_editor.current_project
+      if (current_project === null){
+        return null
+      }
+      return current_project.settings
+    }
+  },
   methods:{
+    update_project_settings(key, value){
+      this.project_settings[key] = value
+      this.$store.dispatch('update_current_project')
+    },
+
     make_file_and_download(filename, text) {
       let element = document.createElement('a');
       element.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
@@ -71,9 +87,6 @@ export default {
       let el = this.$store.state.components_tree_root_element
       this.make_file_and_download('slides.html', el.innerHTML)
     }
-  },
-  created() {
-    this.project_settings.aspect_ratio_wh = this.aspect_ratio_wh_options[1].value
   }
 }
 </script>

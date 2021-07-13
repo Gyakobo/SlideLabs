@@ -3,10 +3,11 @@ import { createStore } from 'vuex'
 import screen_width_settings from "../utils/screen_width/screen_width_settings";
 
 import file_manager from "./file_manager";
+import presentation_editor from "./presentation_editor";
 
 export default createStore({
   modules:{
-    file_manager
+    file_manager, presentation_editor
   },
   state () {
     return {
