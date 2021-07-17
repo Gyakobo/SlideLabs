@@ -6,7 +6,7 @@
       @pointerdown="set_active_component(components_tree_item, $event)"
   >
     <keep-alive v-for="child in components_tree_item.children" :key="child">
-      <component :is="child.type" :components_tree_item="child"></component>
+     	<component :is="child.type" :components_tree_item="child"></component>
     </keep-alive>
   </div>
 </template>

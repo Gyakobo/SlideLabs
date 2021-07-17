@@ -1,20 +1,38 @@
 let TreeItem = function (type, id, parent=null){
-  this.type = type
-  this.is_folder = (type === 'sl_container')
+	this.type = type
+	this.is_folder = (type === 'sl_container')
 
-  this.id = id
-  this.parent = parent
+	this.id = id
+	this.parent = parent
 
-  this.is_active = false
+	this.is_active = false
 
-  if (this.is_folder){
-    this.children = []
-    this.next_id = 1
-  }
+	if (this.is_folder){
+		this.children = []
+		this.next_id = 1
+	}
+     
+	if (!this.is_folder) {
+		this.params = {
+			root_element_style: {},
 
-  this.params = {
-    root_element_style:{}
-  }
+			text_style: {
+				padding:	'',
+				border:		'',
+				background:	'',
+				margin:		'',
+			},
+		}
+	}
+
+	else {
+		this.params = {
+			root_element_style: {
+				border:		'',
+				background:	'',
+			}
+		}
+	}
 }
 
 TreeItem.prototype.add_child = function (type, id=null) {

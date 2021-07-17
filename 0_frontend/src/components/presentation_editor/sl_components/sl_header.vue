@@ -5,7 +5,7 @@
 		:id="components_tree_item.id"
 		class="sl header disable_select"
 		:class="{active:components_tree_item.is_active, on_text_edit: edit_text_flag}"
-		:style="components_tree_item.params.root_element_style"
+		:style="[ components_tree_item.params.root_element_style, components_tree_item.params.text_style ]"
 		
 		spellcheck=false
 
