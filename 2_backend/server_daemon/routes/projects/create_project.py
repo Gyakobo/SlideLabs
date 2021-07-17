@@ -34,6 +34,9 @@ async def create_project(request):
         'slide_ids': [],
         'settings': {
             'aspect_ratio_wh': 16/9
+        },
+        'style': {
+            'sl_header_font_size': 0.05,
         }
     }
     project.update(r_json)

@@ -1,5 +1,5 @@
 <template>
-  <div class="main_wrapper params_group">
+  <div class="main_wrapper">
     <div
         v-for="(item, key1) in active_component_params"
         :key="key1"
@@ -13,28 +13,12 @@
       >
         <span>{{key2}}:</span>
 
-        <textarea
-            v-if="key1 === 'text' && key2 === 'value'"
-            :value="item2"
-            @change="update_active_component_params(key1, key2, $event)"
-        ></textarea>
         <input
-            v-else
+            type="text"
             :value="item2"
             @change="update_active_component_params(key1, key2, $event)"
         >
       </div>
-    </div>
-
-    <div class="flex-spacer">
-    </div>
-
-    <div
-        v-if="is_can_delete"
-        class="ui big basic red button"
-        @click="delete_component()"
-    >
-      Удалить компонент
     </div>
   </div>
 </template>
@@ -46,27 +30,20 @@ export default {
     }
   },
   computed:{
-    active_component(){
-      return this.$store.state.active_component
-    },
-    is_can_delete(){
-      return this.active_component !== null && this.active_component.parent != null
-    },
     active_component_params(){
-      if (this.active_component === null){
+      let active_component = this.$store.state.active_component
+
+      if (active_component === null){
         return {}
+      } else {
+        return active_component.params
       }
-      return this.$store.state.active_component.params
     }
   },
   methods:{
     update_active_component_params(key1, key2, event) {
       this.active_component_params[key1][key2] = event.target.value
     },
-    delete_component(){
-      let active_component = this.active_component
-      active_component.parent.remove_child(active_component.id)
-    }
   }
 }
 </script>
@@ -78,7 +55,6 @@ export default {
 
   font-size: 20px;
   height: 100%;
-  padding-bottom: 20px !important;
 }
 
 .params_group{
@@ -101,10 +77,6 @@ export default {
 
 .item input{
   width: 150px;
-}
-
-.flex-spacer{
-  flex-grow: 1;
 }
 
 </style>

@@ -3,12 +3,12 @@
 </template>
 
 <script>
-import screen_width_mixin from "./utils/screen_width/screen_width_mixin";
+import screen_size_mixin from "./utils/screen_width/screen_size_mixin";
 
 export default {
   name: 'App',
   mixins:[
-    screen_width_mixin
+    screen_size_mixin
   ],
 }
 </script>

@@ -70,12 +70,12 @@ DragResizer.prototype.set_constraints = function (constraints) {
 }
 
 DragResizer.prototype.update_position = function (x, y){
-  this.element.style.left = x + 'px'
-  this.element.style.top = y + 'px'
+  this.element.style.left = Math.round(x) + 'px'
+  this.element.style.top = Math.round(y) + 'px'
 }
 DragResizer.prototype.update_size = function (w, h){
-  this.element.style.width = w + 'px'
-  this.element.style.height = h + 'px'
+  this.element.style.width = Math.round(w) + 'px'
+  this.element.style.height = Math.round(h) + 'px'
 }
 DragResizer.prototype.set_update_position_callback = function (callback){
   this.update_position = callback
@@ -204,8 +204,8 @@ DragResizer.prototype.pointerdown_listener = function (event) {
     return
   }
 
-  let x = event.pageX
-  let y = event.pageY
+  let x = event.clientX
+  let y = event.clientY
   let rect = this.element.getBoundingClientRect()
 
   this.action = this.detect_action(x,y,rect)
@@ -261,8 +261,8 @@ DragResizer.prototype.pointermove_listener = function (event) {
   if (this.enable_cursor_styling){
     let action = this.action
     if (action === null) {
-      let x = event.pageX
-      let y = event.pageY
+      let x = event.clientX
+      let y = event.clientY
       let rect = this.element.getBoundingClientRect()
 
       action = this.detect_action(x, y, rect)
@@ -275,16 +275,16 @@ DragResizer.prototype.pointermove_listener = function (event) {
     return
   }
 
-  let x = event.pageX
-  let y = event.pageY
+  let x = event.clientX
+  let y = event.clientY
 
   let dx = x - this.start_pointer_x
   let dy = y - this.start_pointer_y
 
   if (this.action === 'drag'){
     this.update_position(
-      this.start_x + Math.round(dx),
-      this.start_y + Math.round(dy)
+      this.start_x + dx,
+       this.start_y + dy
     )
   }
   else if(this.action === 'rotate'){
@@ -328,12 +328,12 @@ DragResizer.prototype.pointermove_listener = function (event) {
     height = cheight
 
     this.update_size(
-      Math.round(width),
-      Math.round(height)
+      width,
+      height
     )
     this.update_position(
-      this.start_x + Math.round(dleft),
-      this.start_y + Math.round(dtop)
+      this.start_x + dleft,
+      this.start_y + dtop
     )
   }
 

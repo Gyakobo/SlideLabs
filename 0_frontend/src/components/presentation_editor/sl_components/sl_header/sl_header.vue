@@ -5,7 +5,7 @@
 		:id="components_tree_item.id"
 		class="sl header disable_select"
 		:class="{active:components_tree_item.is_active, on_text_edit: edit_text_flag}"
-		:style="components_tree_item.params.root_element_style"
+		:style="style"
 		
 		spellcheck=false
 
@@ -17,29 +17,31 @@
 		
 		@keydown.tab.prevent
 	>
-		{{ content }}
+		{{ text_value }}
 	</div>
 </template>
 
 <script>
-import draggable_resizable_component_mixin from "../../../utils/drag_resize/draggable_resizable_component_mixin";
-import components_tree_controller_mixin from "../../../utils/components_tree/components_tree_controller_mixin";
+import draggable_resizable_component_mixin from "../../../../utils/drag_resize/draggable_resizable_component_mixin";
+import text_manager_mixin from "./text_manager_mixin";
+import components_tree_controller_mixin from "../../../../utils/components_tree/components_tree_controller_mixin";
 
 let actions = {
   not_active:['drag'],
-  active_no_edit:['top', 'bottom', 'left', 'right', 'drag'],
+  active_no_edit:['left', 'right', 'drag'],
   active_edit:[],
 }
 
 export default {
   mixins:[
     draggable_resizable_component_mixin,
+    text_manager_mixin,
     components_tree_controller_mixin
   ],
   data (){
     return {
       edit_text_flag:	false,
-      content: 'Example_Text',
+      interval_handle:null
     }
   },
   props:{
@@ -49,6 +51,12 @@ export default {
     }
   },
   computed:{
+    style(){
+      let style = {}
+      Object.assign(style, this.root_element_dr_style)
+      Object.assign(style, this.text_style)
+      return style
+    },
     is_active(){
       return this.components_tree_item.is_active
     }
@@ -78,25 +86,47 @@ export default {
     }
   },
   methods: {
+    update_text_value(){
+      this.tm_params.value = this.$refs.text.innerText
+    },
     edit_text() {
       this.$refs.text.style.cursor = 'text';
       this.$refs.text.contentEditable = true;
       this.$refs.text.focus();
       this.edit_text_flag = true;
+
+      this.interval_handle = setInterval(() => {
+        this.update_text_value()
+      }, 1000)
     },
     quit_edit_text() {
       this.$refs.text.contentEditable = false
       this.edit_text_flag = false;
+
+      clearInterval(this.interval_handle)
+      this.update_text_value()
     },
+    initialize_params_if_empty(){
+      if (this.components_tree_item.params === null){
+        this.components_tree_item.params = {
+          drag_resizer:{
+            x:0,
+            y:0,
+            width:0.5,
+          },
+          text:{
+            value:'Header\n111',
+            font_size:1,
+            line_height:1,
+            letter_spacing:0,
+            text_align:'left',
+          },
+        }
+      }
+    }
   },
   created() {
-    let style = this.components_tree_item.params.root_element_style
-    let left = Object.prototype.hasOwnProperty.call(style, 'left') ? parseInt(style['left']) : 0
-    let top = Object.prototype.hasOwnProperty.call(style, 'top') ? parseInt(style['top']) : 0
-    let width = Object.prototype.hasOwnProperty.call(style, 'width') ? parseInt(style['width']) : 200
-    let height = Object.prototype.hasOwnProperty.call(style, 'height') ? parseInt(style['height']) : 100
-    this.init_position(left, top)
-    this.init_size(width, height)
+    this.initialize_params_if_empty()
   },
 }
 
@@ -114,35 +144,18 @@ export default {
 }
 
 .sl.header{
-	font-size:	150%;
-	font-family:	'sans-serif';
-
-	display:	inline-block;
+  position: absolute;
+  display:	inline-block;
 
 	word-break:	break-all;
-
-	/*display:	grid;
-	grid-template-columns:	1fr;
-	grid-template-rows:	1fr;
-	place-items:	center;*/
-
-	/*width: fit-content;
-	height: fit-content;*/
-
-	position: absolute;
 	user-select: none;
-	
 	cursor:		text;
-}
 
-.sl.header pre {
-	white-space:	pre-wrap;
+  white-space:pre;
 }
 
 .on_text_edit {
 	cursor:		text;
-	border:		2px solid lightblue;
-	
 	background:	#ffeb6b;
 }
 

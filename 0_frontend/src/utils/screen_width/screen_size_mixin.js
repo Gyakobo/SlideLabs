@@ -22,10 +22,10 @@ export default {
     },
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     on_resize() {
-      var w = window.innerWidth
+      let w = window.innerWidth
 
-      this.screen_width = w
       this.$store.state.screen_width = w
+      this.screen_width = w
       this.$store.state.screen_type = this.calc_screen_type()
     },
   },

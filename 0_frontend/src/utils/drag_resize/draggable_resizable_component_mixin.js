@@ -13,16 +13,36 @@ export default {
       default:true,
     }
   },
-  methods:{
-    init_position(x,y){
-      let style = this.components_tree_item.params.root_element_style
-      style.left = x + 'px'
-      style.top = y + 'px'
+  computed:{
+    dr_params(){
+      let params = this.components_tree_item.params
+      if (params === null || params.drag_resizer === undefined) {
+        return null
+      }
+      return params.drag_resizer
     },
-    init_size(w,h){
-      let style = this.components_tree_item.params.root_element_style
-      style.width = w + 'px'
-      style.height = h + 'px'
+    root_element_dr_style(){
+      let dr_params = this.dr_params
+      if (dr_params === null){
+        return {}
+      }
+
+      let slide_w_px = this.$store.state.presentation_editor.slide_w_px
+
+      let style = {}
+      if (dr_params.x !== undefined){
+        style.left = dr_params.x * slide_w_px + 'px'
+      }
+      if (dr_params.y !== undefined){
+        style.top = dr_params.y * slide_w_px + 'px'
+      }
+      if (dr_params.width !== undefined){
+        style.width = dr_params.width * slide_w_px + 'px'
+      }
+      if (dr_params.height !== undefined){
+        style.height = dr_params.height * slide_w_px + 'px'
+      }
+      return style
     }
   },
   mounted() {
@@ -36,17 +56,37 @@ export default {
     resizer.set_element(this.root_element)
     resizer.set_actions(['drag'])
     resizer.set_update_size_callback(
-      (w,h) => {
-        let style = this.components_tree_item.params.root_element_style
-        style.width = w + 'px'
-        style.height = h + 'px'
+      (w_px,h_px) => {
+        let  dr_params = this.dr_params
+        if (dr_params === null){
+          return
+        }
+
+        let slide_w_px = this.$store.state.presentation_editor.slide_w_px
+
+        if (dr_params.width !== undefined){
+          dr_params.width = w_px / slide_w_px
+        }
+        if (dr_params.height !== undefined){
+          dr_params.height = h_px / slide_w_px
+        }
       }
     )
     resizer.set_update_position_callback(
-      (x,y) => {
-        let style = this.components_tree_item.params.root_element_style
-        style.left = x + 'px'
-        style.top = y + 'px'
+      (x_px,y_px) => {
+        let  dr_params = this.dr_params
+        if (dr_params === null){
+          return
+        }
+
+        let slide_w_px = this.$store.state.presentation_editor.slide_w_px
+
+        if (dr_params.x !== undefined){
+          dr_params.x = x_px / slide_w_px
+        }
+        if (dr_params.y !== undefined){
+          dr_params.y = y_px / slide_w_px
+        }
       }
     )
     resizer.add_listeners()

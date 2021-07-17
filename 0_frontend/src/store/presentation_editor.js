@@ -6,6 +6,7 @@ export default {
   state:{
     current_project:null,
     current_slide:null,
+    slide_w_px:1000,
   },
   actions: {
     async get_project_by_id(context, data) {
@@ -58,9 +59,9 @@ export default {
               alert(`No such slide: "${slide_id}"!`)
             } else {
               let slide = slides[0]
-              context.state.current_slide = slide
-
               slide.components_tree = ctcm.methods.deserialize_ctree(slide.components_tree)
+
+              context.state.current_slide = slide
             }
           }
         },
@@ -69,11 +70,15 @@ export default {
     },
 
     async update_current_slide(context) {
+      let ctree_json = ctcm.methods.serialize_ctree(context.state.current_slide.components_tree)
+
       await backend_request(
         'update_slide',
         {
           slide_id: context.state.current_slide._id,
-          changes: context.state.current_slide
+          changes: {
+            'components_tree': ctree_json,
+          }
         },
         check_backend_error,
         on_http_error,
