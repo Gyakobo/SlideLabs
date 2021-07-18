@@ -32,12 +32,6 @@ class Config(BaseConfig):
     MONGODB_MAX_POOL_SIZE = 200
     DATABASE_NAME = 'slidelab'
 
-    #database
-#     if IS_PROD_SERVER:
-#         DATABASE_PATH = 'postgresql+psycopg2://myuser:Whiterabbit777@localhost/nut_nut'
-#     else:
-#         DATABASE_PATH = 'sqlite:///%s/RES/main.sqlite' % PROJECT_DIR
-
     # ~~~~~~~~~~~~~~~~~~~~~START LOGGING~~~~~~~~~~~~~~~~~~~~~
     LOGS_PATH = PROJECT_DIR + '/z_logs/'
     ONE_LOG_MAX_BYTES = 1024 * 1024 * 32  # 32mb
@@ -45,7 +39,6 @@ class Config(BaseConfig):
     # ~~~~~~~~~~~~~~~~~~~~~END LOGGING~~~~~~~~~~~~~~~~~~~~~
 
 CONFIG = Config()
-#CONFIG.reload_config()
 
 if __name__ == "__main__":
     from datetime import datetime

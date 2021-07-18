@@ -29,7 +29,7 @@
 
 <script>
 import tab_component_params from "./children/tab_component_params";
-import drag_resizer from "../../../../utils/drag_resize/drag_resizer";
+import drag_resizer from "../../../../../../3_js_common/utils/drag_resize/drag_resizer";
 
 export default {
   components:{

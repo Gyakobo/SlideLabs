@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import components_tree_controller_mixin from "../../../../../utils/components_tree/components_tree_controller_mixin";
+import components_tree_controller_mixin from "../../../../../../../3_js_common/utils/components_tree/components_tree_controller_mixin";
 import tab_components_tree_item from "./tab_components_tree_item";
 
 export default {
@@ -17,11 +17,12 @@ export default {
   ],
   data (){
     return {
-      components_tree_root_item:null
     }
   },
-  created() {
-    this.components_tree_root_item = this.get_ctree_root()
+  computed:{
+    components_tree_root_item(){
+      return this.$store.state.presentation.current_slide.components_tree
+    }
   },
 }
 </script>

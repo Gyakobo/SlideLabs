@@ -1,15 +1,13 @@
 import router from "../router/router";
-import { backend_request, on_http_error, check_backend_error } from "../utils/transport/transport"
-import ctcm from "../utils/components_tree/components_tree_controller_mixin";
+import { backend_request, on_http_error, check_backend_error } from "../../../3_js_common/utils/transport/transport"
+import {serialize_ctree, deserialize_ctree} from "../../../3_js_common/utils/components_tree/components_tree_controller_mixin";
 
 export default {
   state:{
-    current_project:null,
-    current_slide:null,
-    slide_w_px:1000,
   },
   actions: {
     async get_project_by_id(context, data) {
+      let presentation =  context.rootState.presentation
       let project_id = data.project_id
 
       await backend_request(
@@ -24,7 +22,7 @@ export default {
               alert(`No such project: "${project_id}"!`)
               router.push({name:'file_manager'})
             } else {
-              context.state.current_project = projects[0]
+              presentation.current_project = projects[0]
             }
           }
         },
@@ -33,11 +31,13 @@ export default {
     },
 
     async update_current_project(context) {
+      let presentation =  context.rootState.presentation
+
       await backend_request(
         'update_project',
         {
-          project_id: context.state.current_project.project_id,
-          changes: context.state.current_project
+          project_id: presentation.current_project.project_id,
+          changes: presentation.current_project
         },
         check_backend_error,
         on_http_error,
@@ -45,6 +45,7 @@ export default {
     },
 
     async get_slide_by_id(context, data) {
+      let presentation =  context.rootState.presentation
       let slide_id = data.slide_id
 
       await backend_request(
@@ -59,9 +60,9 @@ export default {
               alert(`No such slide: "${slide_id}"!`)
             } else {
               let slide = slides[0]
-              slide.components_tree = ctcm.methods.deserialize_ctree(slide.components_tree)
+              slide.components_tree = deserialize_ctree(slide.components_tree)
 
-              context.state.current_slide = slide
+              presentation.current_slide = slide
             }
           }
         },
@@ -70,12 +71,13 @@ export default {
     },
 
     async update_current_slide(context) {
-      let ctree_json = ctcm.methods.serialize_ctree(context.state.current_slide.components_tree)
+      let presentation =  context.rootState.presentation
+      let ctree_json = serialize_ctree(presentation.current_slide.components_tree)
 
       await backend_request(
         'update_slide',
         {
-          slide_id: context.state.current_slide._id,
+          slide_id: presentation.current_slide._id,
           changes: {
             'components_tree': ctree_json,
           }

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import screen_size_mixin from "./utils/screen_width/screen_size_mixin";
+import screen_size_mixin from "../../3_js_common/utils/screen_width/screen_size_mixin";
 
 export default {
   name: 'App',

@@ -29,7 +29,7 @@
 import tab_project_settings from "./children/tab_project_settings";
 import tab_components_tree from "./children/tab_components_tree";
 import tab_components_add from "./children/tab_components_add";
-import drag_resizer from "../../../../utils/drag_resize/drag_resizer";
+import drag_resizer from "../../../../../../3_js_common/utils/drag_resize/drag_resizer";
 
 export default {
   components:{

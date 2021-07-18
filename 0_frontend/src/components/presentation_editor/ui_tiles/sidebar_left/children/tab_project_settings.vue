@@ -43,7 +43,7 @@ export default {
   },
   computed:{
     project_settings(){
-      let current_project = this.$store.state.presentation_editor.current_project
+      let current_project = this.$store.state.presentation.current_project
       if (current_project === null){
         return null
       }

@@ -1,4 +1,4 @@
-import { backend_request, on_http_error, check_backend_error } from "../utils/transport/transport"
+import { backend_request, on_http_error, check_backend_error } from "../../../3_js_common/utils/transport/transport"
 
 export default {
   state:{

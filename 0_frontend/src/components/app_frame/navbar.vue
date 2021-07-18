@@ -28,7 +28,7 @@ export default {
   },
   computed:{
     current_project(){
-      return this.$store.state.presentation_editor.current_project
+      return this.$store.state.presentation.current_project
     },
     is_show_project_name(){
       return this.$route.path.startsWith('/presentation_editor') && this.current_project !== null

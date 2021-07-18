@@ -14,7 +14,7 @@
 
 <script>
 import tab_file_groups from "./children/tab_file_groups"
-import drag_resizer from "../../../../utils/drag_resize/drag_resizer";
+import drag_resizer from "../../../../../../3_js_common/utils/drag_resize/drag_resizer";
 
 export default {
   components:{

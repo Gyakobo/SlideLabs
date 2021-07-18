@@ -6,8 +6,7 @@
     <div
         class="background"
         @click="set_active_component(null)"
-    >
-    </div>
+    ></div>
     <div
         class="work-sheet"
         :style="{
@@ -22,19 +21,32 @@
           :is_drag_resizer_enabled="false"
       ></sl_container>
     </div>
-    <div
-        class="ui icon button reset-zoom-button"
-        title="Reset zoom"
-        @click="reset_zoom"
-    >
-      <i class="expand icon"></i>
+    <div class="buttons-row">
+      <div
+          class="ui icon button"
+          title="Show slides"
+          @pointerup.left="open_slideshow(false)"
+          @pointerup.middle="open_slideshow(true)"
+      >
+        <i class="play icon"></i>
+      </div>
+
+      <div class="flex-spacer"></div>
+
+      <div
+          class="ui icon button"
+          title="Reset zoom"
+          @click="reset_zoom"
+      >
+        <i class="expand icon"></i>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import sl_container from "../sl_components/sl_container";
-import components_tree_controller_mixin from "../../../utils/components_tree/components_tree_controller_mixin";
+import sl_container from "../../../../../3_js_common/sl_components/sl_container";
+import components_tree_controller_mixin from "../../../../../3_js_common/utils/components_tree/components_tree_controller_mixin";
 
 export default {
   components:{
@@ -45,7 +57,6 @@ export default {
   ],
   data (){
     return {
-      components_tree_root_item: null,
       zoomable_canvas_element: null,
       slide_zoom: 0,
       slide_x: 0,
@@ -53,11 +64,14 @@ export default {
     }
   },
   computed:{
-    presentation_editor(){
-      return this.$store.state.presentation_editor
+    presentation(){
+      return this.$store.state.presentation
+    },
+    components_tree_root_item(){
+      return this.presentation.current_slide.components_tree
     },
     project_settings(){
-      let current_project = this.$store.state.presentation_editor.current_project
+      let current_project = this.presentation.current_project
       if (current_project === null){
         return {
           aspect_ratio_wh: 16/9
@@ -84,10 +98,22 @@ export default {
   },
   watch:{
     slide_width(new_value){
-      this.presentation_editor.slide_w_px = new_value
+      this.presentation.slide_w_px = new_value
     },
   },
   methods:{
+    open_slideshow(is_new_tab){
+      let project_id = this.presentation.current_project.project_id
+      let url = this.$store.state.slideshow_url + '/slideshow/' + project_id
+
+      console.log(is_new_tab)
+
+      if(is_new_tab){
+        window.open(url,'_blank')
+      }else{
+        window.open(url, '_self')
+      }
+    },
     zoom_in_out(event){
       let is_scroll_up = event.deltaY < 0
       let zoom_speed = 1.1
@@ -119,9 +145,6 @@ export default {
       this.zoomable_canvas_element.removeEventListener('wheel', this.zoom_in_out)
     }
   },
-  created() {
-    this.components_tree_root_item = this.get_ctree_root()
-  },
   mounted() {
     this.zoomable_canvas_element = document.getElementById('zoomable_canvas')
 
@@ -145,12 +168,30 @@ export default {
   flex-grow: 1;
 }
 
-.reset-zoom-button{
+.buttons-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+
   position: absolute;
-  right: 10px;
-  top: 10px;
+  left: 0;
+  top: 0;
+  width: 100%;
+
+  padding: 5px;
+
+  background: rgba(0,0,0,0.05);
 }
-.reset-zoom-button i{
+
+.flex-spacer{
+  flex-grow: 1;
+}
+
+.buttons-row .ui.button{
+  margin: 5px;
+}
+.buttons-row .ui.button i{
   color: #333;
 }
 

@@ -14,7 +14,7 @@ from configs.config import CONFIG
 client = pymongo.MongoClient(CONFIG.MONGODB_HOST, CONFIG.MONGODB_PORT)
 db = client[CONFIG.DATABASE_NAME]
 
-db.projects.delete_many( { } )
+db.projects.delete_many({})
 db.projects.create_index([('project_id', pymongo.ASCENDING)], unique=True)
 
 print(sorted(list(db.projects.index_information())))
