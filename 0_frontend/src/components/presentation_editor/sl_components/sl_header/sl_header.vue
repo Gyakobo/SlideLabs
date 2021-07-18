@@ -52,10 +52,10 @@ export default {
   },
   computed:{
     style(){
-      let style = {}
-      Object.assign(style, this.root_element_dr_style)
-      Object.assign(style, this.text_style)
-      return style
+      return [
+        this.root_element_dr_style,
+        this.text_style
+      ]
     },
     is_active(){
       return this.components_tree_item.is_active
