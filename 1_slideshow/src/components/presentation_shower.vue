@@ -8,8 +8,8 @@
     <div
         class="slide-sheet"
         :style="{
-          width:slide_width + 'px',
-          height:slide_height + 'px'
+          width:slide_size.width + 'px',
+          height:slide_size.height + 'px'
         }"
     >
       <sl_container
@@ -53,17 +53,29 @@ export default {
       }
       return current_project.settings
     },
-    slide_width(){
-      console.log('slide_width',  this.$store.state.screen_width)
-      return this.$store.state.screen_width
-    },
-    slide_height(){
-      return this.slide_width / this.project_settings.aspect_ratio_wh
+    slide_size(){
+      let screen_w = this.$store.state.screen_width
+      let screen_h = this.$store.state.screen_height
+      let aspect_ratio_wh = this.project_settings.aspect_ratio_wh
+
+      let size
+      if (screen_w > screen_h * aspect_ratio_wh){
+        size = {
+          width: screen_h * aspect_ratio_wh,
+          height: screen_h,
+        }
+      }else{
+        size = {
+          width: screen_w,
+          height: screen_w / aspect_ratio_wh,
+        }
+      }
+      return size
     },
   },
   watch:{
-    slide_width(new_value){
-      this.presentation.slide_w_px = new_value
+    slide_size(new_value){
+      this.presentation.slide_w_px = new_value.width
     },
   },
   async created() {

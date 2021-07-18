@@ -84,6 +84,10 @@ export function serialize_ctree(ctree_obj){
 export default {
   methods:{
     set_active_component(component, event=null){
+      if (!this.$store.state.presentation.is_editable){
+        return
+      }
+
       if (event !== null){
         event.stopPropagation()
       }

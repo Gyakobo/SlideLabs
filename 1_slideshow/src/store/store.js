@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 
-import screen_width_settings from "../../../3_js_common/utils/screen_width/screen_width_settings";
+import screen_width_settings from "../../../3_js_common/utils/screen_size/screen_size_settings";
 import {backend_request, check_backend_error, on_http_error} from "../../../3_js_common/utils/transport/transport";
 import {deserialize_ctree} from "../../../3_js_common/utils/components_tree/components_tree_controller_mixin";
 
@@ -15,7 +15,7 @@ export default createStore({
       is_presentation_editable:false,
 
       presentation:{
-        is_editable:true,
+        is_editable:false,
 
         current_project:null,
         current_slide:null,

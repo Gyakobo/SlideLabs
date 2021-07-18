@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 
-import screen_width_settings from "../../../3_js_common/utils/screen_width/screen_width_settings";
+import screen_width_settings from "../../../3_js_common/utils/screen_size/screen_size_settings";
 
 import file_manager from "./file_manager";
 import presentation_editor from "./presentation_editor";

@@ -1,4 +1,10 @@
 export default {
+  data(){
+    return {
+      interval_handle:null,
+      tmp_value:''
+    }
+  },
   computed:{
     project_style(){
       return this.$store.state.presentation.current_project.style
@@ -33,8 +39,30 @@ export default {
     }
   },
   methods:{
-    on_text_change(event){
-      this.tm_params.value = event.target.value
+    update_tmp_value(){
+      this.tmp_value = this.$refs.text.innerText
+    },
+    edit_text() {
+      if (!this.$store.state.presentation.is_editable){
+        return false
+      }
+
+      this.$refs.text.style.cursor = 'text';
+      this.$refs.text.contentEditable = true;
+      this.$refs.text.focus();
+      this.edit_text_flag = true;
+
+      this.interval_handle = setInterval(() => {
+        this.update_tmp_value()
+      }, 1000)
+    },
+    quit_edit_text() {
+      this.$refs.text.contentEditable = false
+      this.edit_text_flag = false;
+
+      clearInterval(this.interval_handle)
+      this.update_tmp_value()
+      this.tm_params.value = this.tmp_value
     },
   }
 }

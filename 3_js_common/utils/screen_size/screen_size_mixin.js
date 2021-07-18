@@ -1,4 +1,4 @@
-import screen_width_settings from "./screen_width_settings";
+import screen_width_settings from "./screen_size_settings";
 
 export default {
   data(){
@@ -27,6 +27,8 @@ export default {
       this.$store.state.screen_width = w
       this.screen_width = w
       this.$store.state.screen_type = this.calc_screen_type()
+
+      this.$store.state.screen_height = window.innerHeight
     },
   },
 

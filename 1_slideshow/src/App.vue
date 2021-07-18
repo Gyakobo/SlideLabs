@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import screen_size_mixin from "../../3_js_common/utils/screen_width/screen_size_mixin";
+import screen_size_mixin from "../../3_js_common/utils/screen_size/screen_size_mixin";
 import presentation_shower from "./components/presentation_shower";
 
 export default {

@@ -4,7 +4,7 @@
 
 		:id="components_tree_item.id"
 		class="sl header disable_select"
-		:class="{active:components_tree_item.is_active, on_text_edit: edit_text_flag}"
+		:class="{active:is_active, on_text_edit: edit_text_flag}"
 		:style="style"
 		
 		spellcheck=false
@@ -41,7 +41,6 @@ export default {
   data (){
     return {
       edit_text_flag:	false,
-      interval_handle:null
     }
   },
   props:{
@@ -58,6 +57,10 @@ export default {
       ]
     },
     is_active(){
+      if (!this.$store.state.presentation.is_editable){
+        return false
+      }
+
       return this.components_tree_item.is_active
     }
   },
@@ -86,26 +89,6 @@ export default {
     }
   },
   methods: {
-    update_text_value(){
-      this.tm_params.value = this.$refs.text.innerText
-    },
-    edit_text() {
-      this.$refs.text.style.cursor = 'text';
-      this.$refs.text.contentEditable = true;
-      this.$refs.text.focus();
-      this.edit_text_flag = true;
-
-      this.interval_handle = setInterval(() => {
-        this.update_text_value()
-      }, 1000)
-    },
-    quit_edit_text() {
-      this.$refs.text.contentEditable = false
-      this.edit_text_flag = false;
-
-      clearInterval(this.interval_handle)
-      this.update_text_value()
-    },
     initialize_params_if_empty(){
       if (this.components_tree_item.params === null){
         this.components_tree_item.params = {
