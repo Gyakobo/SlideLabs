@@ -98,7 +98,7 @@ export default {
             width:0.5,
           },
           text:{
-            value:'Header\n111',
+            value:'Header',
             font_size:1,
             line_height:1,
             letter_spacing:0,

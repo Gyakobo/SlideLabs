@@ -79,9 +79,7 @@ export default {
     },
   },
   async created() {
-    let project_id = window.location.pathname.split('/')[2]
-
-    await this.$store.dispatch('get_project_by_id', {project_id:project_id})
+    await this.$store.dispatch('get_project')
     await this.$store.dispatch('get_slides')
     this.is_slide_loaded = true
   },

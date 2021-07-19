@@ -1,6 +1,6 @@
 <template>
   <div class="slide_components_tree">
-    <div v-if="project_settings !== null" class="item">
+    <div class="item">
       <span>
         Соотношение сторон
       </span>
@@ -42,29 +42,17 @@ export default {
     }
   },
   computed:{
+    current_project(){
+      return this.$store.state.presentation.current_project
+    },
     project_settings(){
-      let current_project = this.$store.state.presentation.current_project
-      if (current_project === null){
-        return null
-      }
-      return current_project.settings
+      return this.current_project.settings
     }
   },
   methods:{
     update_project_settings(key, value){
       this.project_settings[key] = value
       this.$store.dispatch('update_current_project')
-    },
-
-    make_file_and_download(filename, text) {
-      let element = document.createElement('a');
-      element.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
-      element.download = filename
-      element.style.display = 'none'
-
-      document.body.appendChild(element)
-      element.click();
-      document.body.removeChild(element);
     },
     generate_pdf(element){
       let width = element.children[0].clientWidth
@@ -84,8 +72,8 @@ export default {
       this.generate_pdf(el)
     },
     export_to_html(){
-      let el = this.$store.state.components_tree_root_element
-      this.make_file_and_download('slides.html', el.innerHTML)
+      let project_id = this.current_project.project_id
+      this.$store.dispatch('export_project_to_html', {project_id:project_id})
     }
   }
 }

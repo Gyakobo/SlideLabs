@@ -27,10 +27,16 @@ export default createStore({
     }
   },
   actions:{
-    async get_project_by_id(context, data) {
+    async get_project(context) {
       let presentation = context.state.presentation
-      let project_id = data.project_id
 
+      let project_data_el = document.getElementById('_project_data')
+      if (project_data_el !== null){
+        presentation.current_project = JSON.parse(project_data_el.dataset.json)
+        return
+      }
+
+      let project_id = window.location.pathname.split('/')[2]
       await backend_request(
         'get_projects',
         {
@@ -52,12 +58,28 @@ export default createStore({
 
     async get_slides(context) {
       let presentation = context.state.presentation
+
+      let slides_data_el = document.getElementById('_slides_data')
+      if (slides_data_el !== null){
+        let slides = JSON.parse(slides_data_el.dataset.json)
+        presentation.slides = slides
+
+        if (slides.length === 0) {
+          alert(`Project has no slides!`)
+        } else {
+          let slide = slides[0]
+          slide.components_tree = deserialize_ctree(slide.components_tree)
+
+          presentation.current_slide = slide
+        }
+        return
+      }
+
       let current_project = presentation.current_project
       if (current_project === null){
         alert('Cannot get slides: project is not loaded!')
         return
       }
-
       await backend_request(
         'get_slides',
         {

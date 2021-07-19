@@ -2,6 +2,17 @@ import router from "../router/router";
 import { backend_request, on_http_error, check_backend_error } from "../../../3_js_common/utils/transport/transport"
 import {serialize_ctree, deserialize_ctree} from "../../../3_js_common/utils/components_tree/components_tree_controller_mixin";
 
+function make_file_and_download(filename, text) {
+  let element = document.createElement('a');
+  element.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+  element.download = filename
+  element.style.display = 'none'
+
+  document.body.appendChild(element)
+  element.click();
+  document.body.removeChild(element);
+}
+
 export default {
   state:{
   },
@@ -83,6 +94,25 @@ export default {
           }
         },
         check_backend_error,
+        on_http_error,
+      )
+    },
+
+    async export_project_to_html(context, data) {
+      let project_id = data.project_id
+
+      await backend_request(
+        'export_project_to_html',
+        {
+          project_id: project_id,
+        },
+        (r_json) => {
+          if (check_backend_error(r_json)){
+            let filename = project_id + '.html'
+            let html = r_json.html
+            make_file_and_download(filename, html)
+          }
+        },
         on_http_error,
       )
     },

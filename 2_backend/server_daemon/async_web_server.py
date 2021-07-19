@@ -27,6 +27,8 @@ from server_daemon.routes.slides.create_slide import create_slide
 from server_daemon.routes.slides.get_slides import get_slides
 from server_daemon.routes.slides.update_slide import update_slide
 from server_daemon.routes.slides.delete_slide import delete_slide
+
+from server_daemon.routes.export.export_project_to_html import export_project_to_html
 # ~~~~~~~~~~~~~end routes import~~~~~~~~~~~~~~~~~
 
 from configs.config import CONFIG
@@ -54,6 +56,8 @@ class ServerDaemon:
             '/backend/get_slides': get_slides,
             '/backend/update_slide': update_slide,
             '/backend/delete_slide': delete_slide,
+
+            '/backend/export_project_to_html': export_project_to_html,
         }
         if CONFIG.IS_USE_CORS:
             cors = aiohttp_cors.setup(app, defaults={
