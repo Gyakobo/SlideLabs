@@ -12,11 +12,13 @@
           height:slide_size.height + 'px'
         }"
     >
+	<div id="myTest">
       <sl_container
           v-if="is_slide_loaded"
           :components_tree_item="components_tree_root_item"
           :is_drag_resizer_enabled="false"
       ></sl_container>
+	</div>
     </div>
   </div>
 </template>

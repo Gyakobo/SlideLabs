@@ -39,9 +39,9 @@ export default {
     components_tree_controller_mixin
   ],
   data (){
-    return {
-      edit_text_flag:	false,
-    }
+	return {
+	edit_text_flag:	false,
+	}
   },
   props:{
     components_tree_item:{
@@ -117,6 +117,9 @@ export default {
 </script>
 
 <style scoped>
+
+img {
+}
 
 .disable_select {
 	user-select: none; /* supported by Chrome and Opera */
